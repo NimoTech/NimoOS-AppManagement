@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
-	interfaces "github.com/IceWhaleTech/CasaOS-Common"
+	interfaces "github.com/NimoTech/NimoOS-Common"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/config"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
 )
 
 type migrationTool0412AndOlder struct{}

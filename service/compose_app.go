@@ -13,18 +13,18 @@ import (
 	"strings"
 	"time"
 
-	v1 "github.com/IceWhaleTech/CasaOS-AppManagement/service/v1"
+	v1 "github.com/NimoTech/NimoOS-AppManagement/service/v1"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/config"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/docker"
-	"github.com/IceWhaleTech/CasaOS-Common/external"
-	"github.com/IceWhaleTech/CasaOS-Common/utils"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/file"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/port"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/random"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/docker"
+	"github.com/NimoTech/NimoOS-Common/external"
+	"github.com/NimoTech/NimoOS-Common/utils"
+	"github.com/NimoTech/NimoOS-Common/utils/file"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-Common/utils/port"
+	"github.com/NimoTech/NimoOS-Common/utils/random"
 	"github.com/compose-spec/compose-go/cli"
 	"github.com/compose-spec/compose-go/loader"
 	"github.com/compose-spec/compose-go/types"
@@ -924,16 +924,16 @@ func LoadComposeAppFromConfigFile(appID string, configFile string) (*ComposeApp,
 	return (*ComposeApp)(project), err
 }
 
-var gpuCache *([]external.GPUInfo) = nil
+var gpuCache *([]external.NvidiaGPUInfo) = nil
 
 func removeRuntime(a *ComposeApp) {
 	if config.RemoveRuntimeIfNoNvidiaGPUFlag {
 
 		// if gpuCache is nil, it means it is first time fetching gpu info
 		if gpuCache == nil {
-			value, err := external.GPUInfoList()
+			value, err := external.NvidiaGPUInfoList()
 			if err != nil {
-				gpuCache = &([]external.GPUInfo{})
+				gpuCache = &([]external.NvidiaGPUInfo{})
 			} else {
 				gpuCache = &value
 			}

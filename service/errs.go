@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
 )
 
 var (

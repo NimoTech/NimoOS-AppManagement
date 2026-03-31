@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/IceWhaleTech/CasaOS-Common/utils"
+	"github.com/NimoTech/NimoOS-Common/utils"
 	"gopkg.in/yaml.v3"
 )
 

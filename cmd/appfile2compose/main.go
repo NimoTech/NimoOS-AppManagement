@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/model"
+	"github.com/NimoTech/NimoOS-AppManagement/model"
 	"gopkg.in/yaml.v3"
 )
 
