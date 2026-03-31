@@ -2,9 +2,9 @@
  *@Date: 2021-12-08 18:10:25
  *@LastEditors: LinkLeong
  *@LastEditTime: 2022-07-13 10:49:16
- *@FilePath: /CasaOS/model/docker.go
+ *@FilePath: /NimoOS/model/docker.go
  *@Description:
- *@Website: https://www.casaos.io
+ *@Website: https://www.nimoos.io
  *Copyright (c) 2022 by icewhale, All Rights Reserved.
  */
 package model

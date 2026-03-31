@@ -41,9 +41,9 @@ import (
 type ComposeApp codegen.ComposeApp
 
 func (a *ComposeApp) StoreInfo(includeApps bool) (*codegen.ComposeAppStoreInfo, error) {
-	ex, ok := a.Extensions[common.ComposeExtensionNameXCasaOS]
+	ex, ok := a.Extensions[common.ComposeExtensionNameXNimoOS]
 	if !ok {
-		return nil, ErrComposeExtensionNameXCasaOSNotFound
+		return nil, ErrComposeExtensionNameXNimoOSNotFound
 	}
 
 	var storeInfo codegen.ComposeAppStoreInfo
@@ -53,7 +53,7 @@ func (a *ComposeApp) StoreInfo(includeApps bool) (*codegen.ComposeAppStoreInfo, 
 	}
 
 	// TODO refactor this with ComposeAppWithStoreInfo
-	isUncontrolled, ok := a.Extensions[common.ComposeExtensionNameXCasaOS].(map[string]interface{})[common.ComposeExtensionPropertyNameIsUncontrolled].(bool)
+	isUncontrolled, ok := a.Extensions[common.ComposeExtensionNameXNimoOS].(map[string]interface{})[common.ComposeExtensionPropertyNameIsUncontrolled].(bool)
 	if ok {
 		storeInfo.IsUncontrolled = &isUncontrolled
 	}
@@ -77,8 +77,8 @@ func (a *ComposeApp) StoreInfo(includeApps bool) (*codegen.ComposeAppStoreInfo, 
 		for _, app := range a.Apps() {
 			appStoreInfo, err := app.StoreInfo()
 			if err != nil {
-				if err == ErrComposeExtensionNameXCasaOSNotFound {
-					logger.Info("App does not have x-casaos extension - skipping", zap.String("app", app.Name))
+				if err == ErrComposeExtensionNameXNimoOSNotFound {
+					logger.Info("App does not have x-nimoos extension - skipping", zap.String("app", app.Name))
 					continue
 				}
 
@@ -102,8 +102,8 @@ func (a *ComposeApp) AuthorType() codegen.StoreAppAuthorType {
 	if strings.EqualFold(storeInfo.Author, storeInfo.Developer) {
 		return codegen.Official
 	}
-	if strings.EqualFold(storeInfo.Author, common.ComposeAppAuthorCasaOSTeam) {
-		return codegen.ByCasaos
+	if strings.EqualFold(storeInfo.Author, common.ComposeAppAuthorNimoOSTeam) {
+		return codegen.ByNimoos
 	}
 
 	return codegen.Community
@@ -111,15 +111,15 @@ func (a *ComposeApp) AuthorType() codegen.StoreAppAuthorType {
 
 func (a *ComposeApp) SetStoreAppID(storeAppID string) (string, bool) {
 	// set store_app_id (by convention is the same as app name at install time if it does not exist)
-	extension, ok := a.Extensions[common.ComposeExtensionNameXCasaOS]
+	extension, ok := a.Extensions[common.ComposeExtensionNameXNimoOS]
 	if !ok {
-		logger.Info("compose app does not have x-casaos extension - might not be a compose app for CasaOS", zap.String("app", a.Name))
+		logger.Info("compose app does not have x-nimoos extension - might not be a compose app for NimoOS", zap.String("app", a.Name))
 		return "", false
 	}
 
 	composeAppStoreInfo, ok := extension.(map[string]interface{})
 	if !ok {
-		logger.Info("compose app does not have valid x-casaos extension - might not be a compose app for CasaOS", zap.String("app", a.Name))
+		logger.Info("compose app does not have valid x-nimoos extension - might not be a compose app for NimoOS", zap.String("app", a.Name))
 		return "", false
 	}
 
@@ -141,15 +141,15 @@ func (a *ComposeApp) SetTitle(title, lang string) {
 		a.Extensions = make(map[string]interface{})
 	}
 
-	extension, ok := a.Extensions[common.ComposeExtensionNameXCasaOS]
+	extension, ok := a.Extensions[common.ComposeExtensionNameXNimoOS]
 	if !ok {
 		extension = map[string]interface{}{}
-		a.Extensions[common.ComposeExtensionNameXCasaOS] = extension
+		a.Extensions[common.ComposeExtensionNameXNimoOS] = extension
 	}
 
 	composeAppStoreInfo, ok := extension.(map[string]interface{})
 	if !ok {
-		logger.Info("compose app does not have valid x-casaos extension - might not be a compose app for CasaOS", zap.String("app", a.Name))
+		logger.Info("compose app does not have valid x-nimoos extension - might not be a compose app for NimoOS", zap.String("app", a.Name))
 		return
 	}
 
@@ -159,7 +159,7 @@ func (a *ComposeApp) SetTitle(title, lang string) {
 
 	titleMap, ok := composeAppStoreInfo[common.ComposeExtensionPropertyNameTitle].(map[string]string)
 	if !ok {
-		logger.Info("compose app does not have valid title map in its x-casaos extension - might not be a compose app for CasaOS", zap.String("app", a.Name))
+		logger.Info("compose app does not have valid title map in its x-nimoos extension - might not be a compose app for NimoOS", zap.String("app", a.Name))
 		return
 	}
 
@@ -949,7 +949,7 @@ func removeRuntime(a *ComposeApp) {
 }
 
 func NewComposeAppFromYAML(yaml []byte, skipInterpolation, skipValidation bool) (*ComposeApp, error) {
-	tmpWorkingDir, err := os.MkdirTemp("", "casaos-compose-app-*")
+	tmpWorkingDir, err := os.MkdirTemp("", "nimoos-compose-app-*")
 	if err != nil {
 		return nil, err
 	}
@@ -1058,16 +1058,16 @@ func getNameFrom(composeYAML []byte) string {
 }
 
 func (a *ComposeApp) SetUncontrolled(uncontrolled bool) error {
-	xCasaos := a.Extensions[common.ComposeExtensionNameXCasaOS]
-	xCasaosMap, ok := xCasaos.(map[string]interface{})
+	xNimoos := a.Extensions[common.ComposeExtensionNameXNimoOS]
+	xNimoosMap, ok := xNimoos.(map[string]interface{})
 
 	// set to controlled app
 	if !ok {
 		logger.Error("failed to get map compose app extensions", zap.String("composeAppID", a.Name))
-		return ErrComposeExtensionNameXCasaOSNotFound
+		return ErrComposeExtensionNameXNimoOSNotFound
 	} else {
-		xCasaosMap[common.ComposeExtensionPropertyNameIsUncontrolled] = uncontrolled
-		a.Extensions[common.ComposeExtensionNameXCasaOS] = xCasaosMap
+		xNimoosMap[common.ComposeExtensionPropertyNameIsUncontrolled] = uncontrolled
+		a.Extensions[common.ComposeExtensionNameXNimoOS] = xNimoosMap
 	}
 
 	return nil

@@ -1,18 +1,18 @@
 openapi: 3.0.3
 
 info:
-  title: CasaOS App Management API
+  title: NimoOS App Management API
   version: v2
   description: |
     <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/IceWhaleTech/logo/main/casaos/casaos_banner_dark_night_800px.png">
-        <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/IceWhaleTech/logo/main/casaos/casaos_banner_twilight_blue_800px.png">
-        <img alt="CasaOS" src="https://raw.githubusercontent.com/IceWhaleTech/logo/main/casaos/casaos_banner_twilight_blue_800px.png">
+        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/NimoTech/logo/main/nimoos/nimoos_banner_dark_night_800px.png">
+        <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/NimoTech/logo/main/nimoos/nimoos_banner_twilight_blue_800px.png">
+        <img alt="NimoOS" src="https://raw.githubusercontent.com/NimoTech/logo/main/nimoos/nimoos_banner_twilight_blue_800px.png">
     </picture>
 
-    CasaOS App Management manages app lifecycle, including installing, uninstalling, starting, stopping, setting, etc.
+    NimoOS App Management manages app lifecycle, including installing, uninstalling, starting, stopping, setting, etc.
 
-    For issues and discussions, please visit the [GitHub repository](https://github.com/IceWhaleTech/CasaOS) or join [our Discord](https://discord.gg/knqAbbBbeX).
+    For issues and discussions, please visit the [GitHub repository](https://github.com/NimoTech/NimoOS) or join [our Discord](https://discord.gg/knqAbbBbeX).
 
 servers:
   - url: /v2/app_management
@@ -647,7 +647,7 @@ paths:
 
         Custom health check procedure will be implemented in the future.
 
-        > This method works for legacy apps running on CasaOS v0.4.3 and earlier.
+        > This method works for legacy apps running on NimoOS v0.4.3 and earlier.
         > For compose app, use `GET /compose/{id}/healthcheck` instead.
       operationId: checkContainerHealthByID
       tags:
@@ -690,7 +690,7 @@ paths:
           $ref: "#/components/responses/GetWebAppGridOK"
 
   # the endpoint is newer version of POST /appstore for the demand of @ETWang1991 
-  # the old api is dependent by CasaOS. So we can't remove it.
+  # the old api is dependent by NimoOS. So we can't remove it.
   # a good idea is /v3/app-management/appstore. But it is hard to implement in ZimaOS
   # So I had to add the endpoint here.
   /web/sync/appstore:
@@ -736,7 +736,7 @@ components:
       in: query
       schema:
         type: string
-        example: "https://github.com/IceWhaleTech/CasaOS-AppStore"
+        example: "https://github.com/NimoTech/NimoOS-AppStore"
 
     AppStoreID:
       name: id
@@ -1251,12 +1251,12 @@ components:
         url:
           type: string
           readOnly: true
-          example: "https://github.com/IceWhaleTech/CasaOS-AppStore/archive/refs/heads/main.zip"
+          example: "https://github.com/NimoTech/NimoOS-AppStore/archive/refs/heads/main.zip"
           x-go-name: URL
         store_root:
           type: string
           readOnly: true
-          example: "CasaOS-AppStore-main"
+          example: "NimoOS-AppStore-main"
 
     CategoryInfo:
       properties:
@@ -1346,23 +1346,23 @@ components:
             en_us: Free, secure, and distributed file synchronisation tool.
         icon:
           type: string
-          example: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/icon.png
+          example: https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@main/Apps/Syncthing/icon.png
         screenshot_link:
           type: array
           items:
             type: string
           example:
-            - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/OpenSpeedTest/screenshot-1.png
-            - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/OpenSpeedTest/screenshot-2.png
+            - https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@main/Apps/OpenSpeedTest/screenshot-1.png
+            - https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@main/Apps/OpenSpeedTest/screenshot-2.png
           x-oapi-codegen-extra-tags:
             mapstructure: "screenshot_link"
             yaml: "screenshot_link,omitempty"
         thumbnail:
           type: string
-          example: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/thumbnail.jpg
+          example: https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@main/Apps/Jellyfin/thumbnail.jpg
         author:
           type: string
-          example: CasaOS Team
+          example: NimoOS Team
         developer:
           type: string
           example: Syncthing
@@ -1528,7 +1528,7 @@ components:
           $ref: "#/components/schemas/StoreAppID"
         icon:
           type: string
-          example: "https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/icon.png"
+          example: "https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@main/Apps/Syncthing/icon.png"
         status:
           type: string
           enum:
@@ -1710,18 +1710,18 @@ components:
         Type of the author of the app
 
         - `official`: The app is contributed by the app owner, i.e. `author`` and `developer`` are the same.
-        - `by_casaos`: The app is contributed by CasaOS team, i.e. `author` is `CasaOS Team`
-        - `community`: The app is contributed by the community, i.e. any app that is not `official` or `by_casaos`
+        - `by_nimoos`: The app is contributed by NimoOS team, i.e. `author` is `NimoOS Team`
+        - `community`: The app is contributed by the community, i.e. any app that is not `official` or `by_nimoos`
       readOnly: true
       type: string
       enum:
         - official
-        - by_casaos
+        - by_nimoos
         - community
         - unknown
       x-enum-varnames:
         - AuthorTypeOfficial
-        - AuthorTypeByCasaOS
+        - AuthorTypeByNimoOS
         - AuthorTypeCommunity
         - AuthorTypeUnknown
 
@@ -1747,7 +1747,7 @@ components:
               en_us: Syncthing
         icon:
           type: string
-          example: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/icon.png
+          example: https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@main/Apps/Syncthing/icon.png
         author_type:
           $ref: "#/components/schemas/StoreAppAuthorType"
         app_type:

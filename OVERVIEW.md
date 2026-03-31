@@ -1,6 +1,6 @@
-# CasaOS-AppManagement 详解
+# NimoOS-AppManagement 详解
 
-CasaOS-AppManagement 是负责容器化应用完整生命周期管理的微服务，整合 Docker Compose 和 CasaOS AppStore。
+NimoOS-AppManagement 是负责容器化应用完整生命周期管理的微服务，整合 Docker Compose 和 NimoOS AppStore。
 
 ---
 
@@ -20,7 +20,7 @@ CasaOS-AppManagement 是负责容器化应用完整生命周期管理的微服�
 ## 目录结构
 
 ```
-CasaOS-AppManagement/
+NimoOS-AppManagement/
 ├── main.go                  # 启动入口
 ├── api/                     # OpenAPI 规范（V1/V2）
 ├── model/                   # 数据模型（App、Port、Env、Volume 映射）
@@ -107,8 +107,8 @@ DELETE /v2/app_management/global/{key}  删除全局配置
 
 - 应用工作目录：`/data/Apps/{appName}/`
 - AppStore 目录缓存：`/data/appstore/`
-- 日志：`/var/log/casaos/app-management.log`
-- 全局环境变量：`/etc/casaos/env`
+- 日志：`/var/log/nimoos/app-management.log`
+- 全局环境变量：`/etc/nimoos/env`
 
 ---
 
@@ -116,15 +116,15 @@ DELETE /v2/app_management/global/{key}  删除全局配置
 
 ```ini
 [common]
-RuntimePath = /var/run/casaos
+RuntimePath = /var/run/nimoos
 
 [app]
 AppStorePath = /data/appstore
 AppsPath = /data/Apps
-LogPath = /var/log/casaos
+LogPath = /var/log/nimoos
 
 [server]
-appstore = https://store.casaos.io
+appstore = https://store.nimoos.io
 ```
 
 ---

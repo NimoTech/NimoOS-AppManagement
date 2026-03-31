@@ -20,6 +20,6 @@ type GlobalModel struct {
 	OpenAIAPIKey string
 }
 
-type CasaOSGlobalVariables struct {
+type NimoOSGlobalVariables struct {
 	AppChange bool
 }

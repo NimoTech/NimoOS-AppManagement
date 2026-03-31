@@ -6,20 +6,20 @@ const (
 
 	AppsDirectoryName = "Apps"
 
-	ComposeAppAuthorCasaOSTeam = "CasaOS Team"
+	ComposeAppAuthorNimoOSTeam = "NimoOS Team"
 
-	ComposeExtensionNameXCasaOS                = "x-casaos"
+	ComposeExtensionNameXNimoOS                = "x-nimoos"
 	ComposeExtensionPropertyNameStoreAppID     = "store_app_id"
 	ComposeExtensionPropertyNameTitle          = "title"
 	ComposeExtensionPropertyNameIsUncontrolled = "is_uncontrolled"
 
 	ComposeYAMLFileName = "docker-compose.yml"
 
-	ContainerLabelV1AppStoreID = "io.casaos.v1.app.store.id"
+	ContainerLabelV1AppStoreID = "io.nimoos.v1.app.store.id"
 
 	DefaultCategoryFont = "grid"
 	DefaultLanguage     = "en_us"
-	DefaultPassword     = "casaos"
+	DefaultPassword     = "nimoos"
 	DefaultPGID         = "1000"
 	DefaultPUID         = "1000"
 	DefaultUserName     = "admin"

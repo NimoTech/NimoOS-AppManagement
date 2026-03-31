@@ -345,7 +345,7 @@ func (a *AppManagement) InstallComposeApp(ctx echo.Context, params codegen.Insta
 		logger.Error("failed to start compose app installation", zap.Error(err))
 
 		message := err.Error()
-		if err == service.ErrComposeExtensionNameXCasaOSNotFound {
+		if err == service.ErrComposeExtensionNameXNimoOSNotFound {
 			return ctx.JSON(http.StatusBadRequest, codegen.ResponseBadRequest{Message: &message})
 		}
 
@@ -635,7 +635,7 @@ func YAMLfromRequest(ctx echo.Context) ([]byte, error) {
 type composeAppsWithStoreInfoOpts struct {
 	checkIsUpdateAvailable bool
 	// The /web/appgrid endpoint does not require information about whether the application can be updated, so we added an option.
-	// This endpoint is called as soon as CasaOS is opened, and we don't have time to cache it in advance.
+	// This endpoint is called as soon as NimoOS is opened, and we don't have time to cache it in advance.
 	// We must ensure that this endpoint responds as quickly as possible.
 }
 
@@ -690,7 +690,7 @@ func composeAppsWithStoreInfo(ctx context.Context, opts composeAppsWithStoreInfo
 			return composeAppWithStoreInfo
 		}
 
-		isUncontrolled, ok := composeApp.Extensions[common.ComposeExtensionNameXCasaOS].(map[string]interface{})[common.ComposeExtensionPropertyNameIsUncontrolled].(bool)
+		isUncontrolled, ok := composeApp.Extensions[common.ComposeExtensionNameXNimoOS].(map[string]interface{})[common.ComposeExtensionPropertyNameIsUncontrolled].(bool)
 		if ok {
 			composeAppWithStoreInfo.IsUncontrolled = &isUncontrolled
 		}

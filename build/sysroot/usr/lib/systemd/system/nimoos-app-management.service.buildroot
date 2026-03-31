@@ -1,0 +1,14 @@
+[Unit]
+After=nimoos-message-bus.service
+After=docker.service
+Description=NimoOS App Management Service
+
+[Service]
+ExecStartPre=/usr/bin/nimoos-app-management -v
+ExecStart=/usr/bin/nimoos-app-management -c /etc/nimoos/app-management.conf --removeRuntimeIfNoNvidiaGPU true
+PIDFile=/run/nimoos/app-management.pid
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

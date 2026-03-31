@@ -17,9 +17,9 @@ func VaildDockerCompose(yaml []byte) (err error) {
 	}()
 	docker, err := service.NewComposeAppFromYAML(yaml, false, false)
 
-	ex, ok := docker.Extensions[common.ComposeExtensionNameXCasaOS]
+	ex, ok := docker.Extensions[common.ComposeExtensionNameXNimoOS]
 	if !ok {
-		return service.ErrComposeExtensionNameXCasaOSNotFound
+		return service.ErrComposeExtensionNameXNimoOSNotFound
 	}
 
 	var storeInfo codegen.ComposeAppStoreInfo

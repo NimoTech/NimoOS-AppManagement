@@ -100,8 +100,8 @@ func getContainerStats() {
 				continue
 			}
 		}
-		if config.CasaOSGlobalVariables.AppChange {
-			config.CasaOSGlobalVariables.AppChange = false
+		if config.NimoOSGlobalVariables.AppChange {
+			config.NimoOSGlobalVariables.AppChange = false
 			dataStats.Range(func(key, value interface{}) bool {
 				dataStats.Delete(key)
 				return true
@@ -255,9 +255,9 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 	}
 	defer cli.Close()
 	// fts := filters.NewArgs()
-	// fts.Add("label", "casaos=casaos")
-	// fts.Add("label", "casaos")
-	// fts.Add("casaos", "casaos")
+	// fts.Add("label", "nimoos=nimoos")
+	// fts.Add("label", "nimoos")
+	// fts.Add("nimoos", "nimoos")
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{All: true})
 	if err != nil {
 		logger.Error("Failed to get container_list", zap.Any("err", err))
@@ -266,7 +266,7 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 
 	localApps := []model.MyAppList{}
 
-	casaOSApps := []model.MyAppList{}
+	nimoOSApps := []model.MyAppList{}
 
 	for i, m := range containers {
 
@@ -288,7 +288,7 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 			}
 		}
 
-		if m.Labels["casaos"] == "casaos" {
+		if m.Labels["nimoos"] == "nimoos" {
 
 			_, newVersion := NewVersionApp[m.ID]
 			name := strings.ReplaceAll(m.Names[0], "/", "")
@@ -299,11 +299,11 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 			if m.Labels["origin"] == "system" {
 				name = strings.Split(m.Image, ":")[0]
 				if len(strings.Split(name, "/")) > 1 {
-					icon = "https://icon.casaos.io/main/all/" + strings.Split(name, "/")[1] + ".png"
+					icon = "https://icon.nimoos.io/main/all/" + strings.Split(name, "/")[1] + ".png"
 				}
 			}
 
-			casaOSApp := model.MyAppList{
+			nimoOSApp := model.MyAppList{
 				Name:       name,
 				Icon:       icon,
 				State:      m.State,
@@ -319,7 +319,7 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 				AppStoreID: getV1AppStoreID(&containers[i]),
 			}
 
-			casaOSApps = append(casaOSApps, casaOSApp)
+			nimoOSApps = append(nimoOSApps, nimoOSApp)
 		} else {
 			localApp := model.MyAppList{
 				Name:     strings.ReplaceAll(m.Names[0], "/", ""),
@@ -339,7 +339,7 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 		}
 	}
 
-	return &casaOSApps, &localApps
+	return &nimoOSApps, &localApps
 }
 
 func (ds *dockerService) CreateContainerShellSession(container, row, col string) (types.HijackedResponse, error) {
@@ -409,7 +409,7 @@ func (ds *dockerService) CreateContainer(m model.CustomizationPostData, id strin
 
 	var envArr []string
 
-	showENV := []string{"casaos"}
+	showENV := []string{"nimoos"}
 
 	for _, e := range m.Envs {
 		showENV = append(showENV, e.Name)
@@ -507,7 +507,7 @@ func (ds *dockerService) CreateContainer(m model.CustomizationPostData, id strin
 		// info.NetworkSettings = &types.NetworkSettings{}
 		hostConfig = info.HostConfig
 		config = info.Config
-		if config.Labels["casaos"] == "casaos" {
+		if config.Labels["nimoos"] == "nimoos" {
 			config.Cmd = m.Cmd
 			config.Image = m.Image
 			config.Env = envArr
@@ -523,7 +523,7 @@ func (ds *dockerService) CreateContainer(m model.CustomizationPostData, id strin
 	}
 
 	config.Labels["origin"] = m.Origin
-	config.Labels["casaos"] = "casaos"
+	config.Labels["nimoos"] = "nimoos"
 	config.Labels["web"] = m.PortMap
 	config.Labels["icon"] = m.Icon
 	config.Labels["desc"] = m.Description

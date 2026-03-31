@@ -23,7 +23,7 @@ func TestFilterCatalogByCategory(t *testing.T) {
 
 	catalog["test"] = &service.ComposeApp{
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+			common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 				"category": "test",
 			},
 		},
@@ -34,7 +34,7 @@ func TestFilterCatalogByCategory(t *testing.T) {
 
 	catalog["test2"] = &service.ComposeApp{
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+			common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 				"category": "test2",
 			},
 		},
@@ -52,7 +52,7 @@ func TestFilterCatalogByAuthorType(t *testing.T) {
 	filteredCatalog := v2.FilterCatalogByAuthorType(catalog, "test")
 	assert.Equal(t, len(filteredCatalog), 0)
 
-	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByCasaos)
+	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByNimoos)
 	assert.Equal(t, len(filteredCatalog), 0)
 
 	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.Official)
@@ -63,8 +63,8 @@ func TestFilterCatalogByAuthorType(t *testing.T) {
 
 	catalog["test"] = &service.ComposeApp{
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: map[string]interface{}{
-				"author": common.ComposeAppAuthorCasaOSTeam,
+			common.ComposeExtensionNameXNimoOS: map[string]interface{}{
+				"author": common.ComposeAppAuthorNimoOSTeam,
 			},
 		},
 	}
@@ -72,7 +72,7 @@ func TestFilterCatalogByAuthorType(t *testing.T) {
 	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, "test")
 	assert.Equal(t, len(filteredCatalog), 0)
 
-	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByCasaos)
+	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByNimoos)
 	assert.Equal(t, len(filteredCatalog), 1)
 
 	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.Official)
@@ -83,7 +83,7 @@ func TestFilterCatalogByAuthorType(t *testing.T) {
 
 	catalog["test2"] = &service.ComposeApp{
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+			common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 				"author":    "test2",
 				"developer": "test2",
 			},
@@ -93,7 +93,7 @@ func TestFilterCatalogByAuthorType(t *testing.T) {
 	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, "test")
 	assert.Equal(t, len(filteredCatalog), 0)
 
-	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByCasaos)
+	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByNimoos)
 	assert.Equal(t, len(filteredCatalog), 1)
 
 	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.Official)
@@ -104,7 +104,7 @@ func TestFilterCatalogByAuthorType(t *testing.T) {
 
 	catalog["test3"] = &service.ComposeApp{
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+			common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 				"author":    "test3",
 				"developer": "syncthing",
 			},
@@ -114,7 +114,7 @@ func TestFilterCatalogByAuthorType(t *testing.T) {
 	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, "test")
 	assert.Equal(t, len(filteredCatalog), 0)
 
-	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByCasaos)
+	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.ByNimoos)
 	assert.Equal(t, len(filteredCatalog), 1)
 
 	filteredCatalog = v2.FilterCatalogByAuthorType(catalog, codegen.Official)
@@ -134,7 +134,7 @@ func TestFilterCatalogByAppStoreID(t *testing.T) {
 
 	catalog["test"] = &service.ComposeApp{
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+			common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 				"main": "test",
 			},
 		},
@@ -142,7 +142,7 @@ func TestFilterCatalogByAppStoreID(t *testing.T) {
 			{
 				Name: "test",
 				Extensions: map[string]interface{}{
-					common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+					common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 						"app_store_id": "test",
 					},
 				},
@@ -155,7 +155,7 @@ func TestFilterCatalogByAppStoreID(t *testing.T) {
 
 	catalog["test2"] = &service.ComposeApp{
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+			common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 				"main": "test2",
 			},
 		},
@@ -163,7 +163,7 @@ func TestFilterCatalogByAppStoreID(t *testing.T) {
 			{
 				Name: "test2",
 				Extensions: map[string]interface{}{
-					common.ComposeExtensionNameXCasaOS: map[string]interface{}{
+					common.ComposeExtensionNameXNimoOS: map[string]interface{}{
 						"app_store_id": "test2",
 					},
 				},

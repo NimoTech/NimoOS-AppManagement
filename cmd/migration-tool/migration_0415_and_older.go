@@ -17,16 +17,16 @@ type UrlReplacement struct {
 
 var replaceUrl = []UrlReplacement{
 	{
-		OldUrl: "https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip",
-		NewUrl: "https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/store/main.zip",
+		OldUrl: "https://github.com/NimoTech/_appstore/archive/refs/heads/main.zip",
+		NewUrl: "https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@gh-pages/store/main.zip",
 	},
 	{
-		OldUrl: "https://casaos.oss-cn-shanghai.aliyuncs.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip",
-		NewUrl: "https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/store/main.zip",
+		OldUrl: "https://nimoos.oss-cn-shanghai.aliyuncs.com/NimoTech/_appstore/archive/refs/heads/main.zip",
+		NewUrl: "https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@gh-pages/store/main.zip",
 	},
 	{
-		OldUrl: "https://casaos.app/store/main.zip",
-		NewUrl: "https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/store/main.zip",
+		OldUrl: "https://nimoos.app/store/main.zip",
+		NewUrl: "https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@gh-pages/store/main.zip",
 	},
 }
 
@@ -50,7 +50,7 @@ func (u *migrationTool0415AndOlder) IsMigrationNeeded() (bool, error) {
 
 	for _, v := range replaceUrl {
 		if strings.Contains(string(content), v.OldUrl) {
-			_logger.Info("Migration is needed for a CasaOS with old app store link.")
+			_logger.Info("Migration is needed for a NimoOS with old app store link.")
 			return true, nil
 		}
 	}
@@ -63,7 +63,7 @@ func (u *migrationTool0415AndOlder) PreMigrate() error {
 
 func (u *migrationTool0415AndOlder) Migrate() error {
 	// replace string in AppManagementConfigFilePath
-	// replace https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip to https://casaos-appstore.github.io/casaos-appstore/linux-all-appstore.zip
+	// replace https://github.com/NimoTech/_appstore/archive/refs/heads/main.zip to https://nimoos-appstore.github.io/nimoos-appstore/linux-all-appstore.zip
 	file, err := os.OpenFile(config.AppManagementConfigFilePath, os.O_RDWR, 0644)
 	if err != nil {
 		_logger.Error("failed to open app management config file: %s", err)

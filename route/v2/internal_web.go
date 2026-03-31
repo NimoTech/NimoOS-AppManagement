@@ -39,9 +39,9 @@ func (a *AppManagement) GetAppGrid(ctx echo.Context) error {
 	})
 
 	// v1 Apps
-	casaOSApps, containers := service.MyService.Docker().GetContainerAppList(nil, nil, nil)
+	nimoOSApps, containers := service.MyService.Docker().GetContainerAppList(nil, nil, nil)
 
-	v1AppGridItems := lo.Map(*casaOSApps, func(app model.MyAppList, i int) codegen.WebAppGridItem {
+	v1AppGridItems := lo.Map(*nimoOSApps, func(app model.MyAppList, i int) codegen.WebAppGridItem {
 		item, err := WebAppGridItemAdapterV1(&app)
 		if err != nil {
 			logger.Error("failed to adapt web app grid item", zap.Error(err), zap.String("app", app.Name))

@@ -1,5 +1,5 @@
 //go:generate bash -c "mkdir -p codegen && go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen@v1.12.4 -generate types,server,spec -package codegen api/app_management/openapi.yaml > codegen/app_management_api.go"
-//go:generate bash -c "mkdir -p codegen/message_bus && go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen@v1.12.4 -generate types,client -package message_bus https://raw.githubusercontent.com/NimoTech/NimoOS-MessageBus/main/api/message_bus/openapi.yaml > codegen/message_bus/api.go"
+//go:generate bash -c "mkdir -p codegen/message_bus && go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen@v1.12.4 -generate types,client -package message_bus ../NimoOS-MessageBus/api/message_bus/openapi.yaml > codegen/message_bus/api.go"
 
 package main
 
@@ -44,7 +44,7 @@ var (
 	//go:embed api/app_management/openapi_v1.yaml
 	_docYAMLV1 string
 
-	//go:embed build/sysroot/etc/casaos/app-management.conf.sample
+	//go:embed build/sysroot/etc/nimoos/app-management.conf.sample
 	_confSample string
 )
 
@@ -167,9 +167,9 @@ func main() {
 	// notify systemd that we are ready
 	{
 		if supported, err := daemon.SdNotify(false, daemon.SdNotifyReady); err != nil {
-			logger.Error("Failed to notify systemd that casaos main service is ready", zap.Any("error", err))
+			logger.Error("Failed to notify systemd that nimoos main service is ready", zap.Any("error", err))
 		} else if supported {
-			logger.Info("Notified systemd that casaos main service is ready")
+			logger.Info("Notified systemd that nimoos main service is ready")
 		} else {
 			logger.Info("This process is not running as a systemd service.")
 		}

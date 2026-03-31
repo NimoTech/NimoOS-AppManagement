@@ -61,7 +61,7 @@ func TestAppStoreList(t *testing.T) {
 
 	ctx = common.WithProperties(ctx, map[string]string{})
 
-	expectAppStoreURL := strings.ToLower("https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip")
+	expectAppStoreURL := strings.ToLower("https://github.com/NimoTech/_appstore/archive/refs/heads/main.zip")
 
 	ch := make(chan *codegen.AppStoreMetadata)
 

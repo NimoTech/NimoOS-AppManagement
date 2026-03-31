@@ -33,7 +33,7 @@ func (a *AppManagement) AppStoreList(ctx echo.Context) error {
 }
 
 // the method should be deprecated
-// but it be used by CasaOS
+// but it be used by NimoOS
 func (a *AppManagement) RegisterAppStore(ctx echo.Context, params codegen.RegisterAppStoreParams) error {
 	if params.Url == nil || *params.Url == "" {
 		message := "appstore url is required"
@@ -392,7 +392,7 @@ func FilterCatalogByCategory(catalog map[string]*service.ComposeApp, category st
 func FilterCatalogByAuthorType(catalog map[string]*service.ComposeApp, authorType codegen.StoreAppAuthorType) map[string]*service.ComposeApp {
 	if !lo.Contains([]codegen.StoreAppAuthorType{
 		codegen.Official,
-		codegen.ByCasaos,
+		codegen.ByNimoos,
 		codegen.Community,
 	}, authorType) {
 		logger.Info("warning: unknown author type - returning empty catalog", zap.String("authorType", string(authorType)))
