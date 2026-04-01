@@ -1,5 +1,5 @@
 {
-  "name": "@nimo/nimoos-appmanagement-openapi",
+  "name": "@nimotech/nimoos-appmanagement-openapi",
   "version": "0.4.10-alpha2",
   "scripts": {
     "clean": "rm -rf generate",
