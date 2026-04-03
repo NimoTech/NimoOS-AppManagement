@@ -63,7 +63,7 @@ func InitV1Router() http.Handler {
 		v1ContainerGroup.Use()
 		{
 
-			// v1ContainerGroup.GET("", v1.MyAppList) ///my/list
+			v1ContainerGroup.GET("", v1.MyAppList) ///my/list
 			v1ContainerGroup.GET("/usage", v1.AppUsageList)
 			v1ContainerGroup.GET("/:id", v1.ContainerUpdateInfo)   ///update/:id/info
 			v1ContainerGroup.GET("/:id/compose", v1.ToComposeYAML) // /app/setting/:id
