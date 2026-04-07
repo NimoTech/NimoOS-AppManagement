@@ -2,6 +2,7 @@ package v2
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -617,12 +618,21 @@ func YAMLfromRequest(ctx echo.Context) ([]byte, error) {
 		buf = _buf
 
 	default:
-		var c codegen.ComposeApp
-		if err := ctx.Bind(&c); err != nil {
+		// Read body as raw bytes and convert JSON → generic map → YAML.
+		// Direct binding into types.Project fails because types.External has
+		// MarshalJSON (emits bool) but no UnmarshalJSON, so the standard JSON
+		// decoder rejects "external": false for a struct field.
+		body, err := io.ReadAll(ctx.Request().Body)
+		if err != nil {
 			return nil, err
 		}
 
-		_buf, err := yaml.Marshal(c)
+		var generic interface{}
+		if err := json.Unmarshal(body, &generic); err != nil {
+			return nil, err
+		}
+
+		_buf, err := yaml.Marshal(generic)
 		if err != nil {
 			return nil, err
 		}
