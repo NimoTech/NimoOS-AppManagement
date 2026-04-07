@@ -303,6 +303,11 @@ func (a *AppStoreManagement) CategoryMap() (map[string]codegen.CategoryInfo, err
 	if allFailed {
 		logger.Info("all appstores failed to load category map, using default")
 
+		if a.defaultAppStore == nil {
+			logger.Info("WARNING - no default appstore")
+			return map[string]codegen.CategoryInfo{}, nil
+		}
+
 		categoryMap, err = a.defaultAppStore.CategoryMap()
 		if err != nil {
 			return nil, err

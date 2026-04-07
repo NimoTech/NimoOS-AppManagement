@@ -8,7 +8,7 @@ const (
 
 	ComposeAppAuthorNimoOSTeam = "NimoOS Team"
 
-	ComposeExtensionNameXNimoOS                = "x-nimoos"
+	ComposeExtensionNameXNimoOS                = "x-nimoos" // "x-casaos"
 	ComposeExtensionPropertyNameStoreAppID     = "store_app_id"
 	ComposeExtensionPropertyNameTitle          = "title"
 	ComposeExtensionPropertyNameIsUncontrolled = "is_uncontrolled"

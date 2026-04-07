@@ -1021,6 +1021,23 @@ func NewComposeAppFromYAML(yaml []byte, skipInterpolation, skipValidation bool) 
 		composeApp.Extensions = map[string]interface{}{}
 	}
 
+	// Backward compat: normalize x-casaos extension to x-nimoos at load time
+	if _, ok := composeApp.Extensions[common.ComposeExtensionNameXNimoOS]; !ok {
+		if ex, ok := composeApp.Extensions["x-casaos"]; ok {
+			composeApp.Extensions[common.ComposeExtensionNameXNimoOS] = ex
+		}
+	}
+	for i := range composeApp.Services {
+		if composeApp.Services[i].Extensions == nil {
+			continue
+		}
+		if _, ok := composeApp.Services[i].Extensions[common.ComposeExtensionNameXNimoOS]; !ok {
+			if ex, ok := composeApp.Services[i].Extensions["x-casaos"]; ok {
+				composeApp.Services[i].Extensions[common.ComposeExtensionNameXNimoOS] = ex
+			}
+		}
+	}
+
 	storeInfo, err := composeApp.StoreInfo(false)
 
 	if err != nil || storeInfo == nil || storeInfo.Title == nil {
