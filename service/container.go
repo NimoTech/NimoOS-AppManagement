@@ -73,6 +73,7 @@ type DockerService interface {
 
 	// docker server
 	GetServerInfo() (types.Info, error)
+	Prune(ctx context.Context) (types.ContainersPruneReport, types.ImagesPruneReport, error)
 }
 
 type dockerService struct{}
@@ -871,4 +872,26 @@ func getV1AppStoreID(m *types.Container) uint {
 
 	logger.Info("the container does not have a v1 app store id", zap.String("containerID", m.ID), zap.String("containerName", m.Names[0]))
 	return 0
+}
+
+func (ds *dockerService) Prune(ctx context.Context) (types.ContainersPruneReport, types.ImagesPruneReport, error) {
+	cli, err := client2.NewClientWithOpts(client2.FromEnv, client2.WithAPIVersionNegotiation())
+	if err != nil {
+		return types.ContainersPruneReport{}, types.ImagesPruneReport{}, err
+	}
+	defer cli.Close()
+
+	// Prune containers
+	containerReport, err := cli.ContainersPrune(ctx, filters.Args{})
+	if err != nil {
+		return types.ContainersPruneReport{}, types.ImagesPruneReport{}, err
+	}
+
+	// Prune images
+	imageReport, err := cli.ImagesPrune(ctx, filters.Args{})
+	if err != nil {
+		return containerReport, types.ImagesPruneReport{}, err
+	}
+
+	return containerReport, imageReport, nil
 }

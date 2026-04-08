@@ -6,7 +6,7 @@ const (
 
 	AppsDirectoryName = "Apps"
 
-	ComposeAppAuthorCasaOSTeam = "CasaOS Team"
+	ComposeAppAuthorCasaOSTeam = "NimoTech Team"
 
 	ComposeExtensionNameXCasaOS                = "x-casaos"
 	ComposeExtensionPropertyNameStoreAppID     = "store_app_id"

@@ -615,6 +615,19 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, &modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: request})
 }
 
+func PruneDocker(ctx echo.Context) error {
+	containerReport, imageReport, err := service.MyService.Docker().Prune(ctx.Request().Context())
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: err.Error()})
+	}
+
+	data := make(map[string]interface{})
+	data["containers"] = containerReport
+	data["images"] = imageReport
+
+	return ctx.JSON(http.StatusOK, modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: data})
+}
+
 func pullAndInstall(ctx context.Context, imageName string, m *model.CustomizationPostData) error {
 	// step：下载镜像
 	if err := func() error {

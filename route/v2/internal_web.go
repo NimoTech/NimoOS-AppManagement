@@ -57,7 +57,7 @@ func (a *AppManagement) GetAppGrid(ctx echo.Context) error {
 		containerLists, err := composeApp.Containers(ctx.Request().Context())
 		if err != nil {
 			logger.Error("failed to get containers for compose app", zap.Error(err), zap.String("app", composeApp.Name))
-			return nil
+			continue
 		}
 
 		for _, containcontainerList := range containerLists {
@@ -104,7 +104,7 @@ func (a *AppManagement) GetAppGrid(ctx echo.Context) error {
 	})
 
 	// merge v1 and v2 apps
-	var appGridItems []codegen.WebAppGridItem
+	appGridItems := []codegen.WebAppGridItem{}
 	appGridItems = append(appGridItems, v2AppGridItems...)
 	appGridItems = append(appGridItems, v1AppGridItems...)
 	appGridItems = append(appGridItems, containerAppGridItems...)

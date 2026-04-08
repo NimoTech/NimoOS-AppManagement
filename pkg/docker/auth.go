@@ -71,7 +71,7 @@ func GetChallengeRequest(URL url.URL) (*http.Request, error) {
 		return nil, err
 	}
 	req.Header.Set("Accept", "*/*")
-	req.Header.Set("User-Agent", "CasaOS")
+	req.Header.Set("User-Agent", "NimoOS")
 	return req, nil
 }
 

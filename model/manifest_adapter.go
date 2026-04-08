@@ -118,11 +118,11 @@ func (c *CustomizationPostData) AppStoreInfo() codegen.AppStoreInfo {
 func (c *CustomizationPostData) ComposeAppStoreInfo() codegen.ComposeAppStoreInfo {
 	name := strings.ToLower(c.ContainerName)
 
-	message := "This is a compose app converted from a legacy app (CasaOS v0.4.3 or earlier)"
+	message := "This is a compose app converted from a legacy app (NimoOS v0.4.3 or earlier)"
 
 	return codegen.ComposeAppStoreInfo{
 		Architectures: &[]string{runtime.GOARCH},
-		Author:        "CasaOS User",
+		Author:        "NimoOS User",
 		Category:      "unknown",
 		Description:   map[string]string{common.DefaultLanguage: c.Description},
 		Developer:     "unknown",
