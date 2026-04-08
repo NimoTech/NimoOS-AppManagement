@@ -6,14 +6,14 @@ import (
 	"os"
 	"strings"
 
-	interfaces "github.com/IceWhaleTech/CasaOS-Common"
+	interfaces "github.com/NimoTech/NimoOS-Common"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/config"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
 )
 
 type migrationTool0412AndOlder struct{}
 
-const bigBearAppStoreUrl = "https://github.com/bigbeartechworld/big-bear-casaos/archive/refs/heads/master.zip"
+const bigBearAppStoreUrl = "https://github.com/bigbeartechworld/big-bear-nimoos/archive/refs/heads/master.zip"
 
 func (u *migrationTool0412AndOlder) IsMigrationNeeded() (bool, error) {
 	_logger.Info("Checking if migration is needed...")

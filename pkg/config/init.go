@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/model"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/constants"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/model"
+	"github.com/NimoTech/NimoOS-Common/utils/constants"
 	"gopkg.in/ini.v1"
 )
 
@@ -34,7 +34,7 @@ var (
 	// Global is a map to inject environment variables to the app.
 	Global = make(map[string]string)
 
-	CasaOSGlobalVariables = &model.CasaOSGlobalVariables{}
+	NimoOSGlobalVariables = &model.NimoOSGlobalVariables{}
 
 	Cfg               *ini.File
 	ConfigFilePath    string

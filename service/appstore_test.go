@@ -9,12 +9,12 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/config"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/docker"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/service"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/file"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/docker"
+	"github.com/NimoTech/NimoOS-AppManagement/service"
+	"github.com/NimoTech/NimoOS-Common/utils/file"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 	"github.com/samber/lo"
 	"go.uber.org/goleak"
 	"gotest.tools/v3/assert"
@@ -37,7 +37,7 @@ func TestGetComposeApp(t *testing.T) {
 
 	config.AppInfo.AppStorePath = appStorePath
 
-	appStore, err := service.AppStoreByURL("https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip")
+	appStore, err := service.AppStoreByURL("https://github.com/NimoTech/_appstore/archive/refs/heads/main.zip")
 	assert.NilError(t, err)
 
 	err = appStore.UpdateCatalog()
@@ -69,7 +69,7 @@ func TestGetApp(t *testing.T) {
 
 	config.AppInfo.AppStorePath = appStorePath
 
-	appStore, err := service.AppStoreByURL("https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip")
+	appStore, err := service.AppStoreByURL("https://github.com/NimoTech/_appstore/archive/refs/heads/main.zip")
 	assert.NilError(t, err)
 
 	err = appStore.UpdateCatalog()
@@ -91,8 +91,8 @@ func TestSkipUpdateCatalog(t *testing.T) {
 	logger.LogInitConsoleOnly()
 
 	appStoreURL := []string{
-		"https://casaos.app/store/main.zip",
-		"https://casaos.oss-cn-shanghai.aliyuncs.com/store/main.zip",
+		"https://nimoos.app/store/main.zip",
+		"https://nimoos.oss-cn-shanghai.aliyuncs.com/store/main.zip",
 	}
 
 	for _, url := range appStoreURL {
@@ -156,7 +156,7 @@ func TestWorkDir(t *testing.T) {
 
 	// test for github
 	hostname := "github.com"
-	path := "/IceWhaleTech/CasaOS-AppStore/archive/refs/heads/main.zip"
+	path := "/NimoTech/NimoOS-AppStore/archive/refs/heads/main.zip"
 	appStore, err = service.AppStoreByURL("https://" + hostname + path)
 	assert.NilError(t, err)
 
@@ -176,7 +176,7 @@ func TestStoreRoot(t *testing.T) {
 
 	workdir := t.TempDir()
 
-	expectedStoreRoot := filepath.Join(workdir, "github.com", "IceWhaleTech", "CasaOS-AppStore", "main")
+	expectedStoreRoot := filepath.Join(workdir, "github.com", "NimoTech", "NimoOS-AppStore", "main")
 	err := file.MkDir(filepath.Join(expectedStoreRoot, common.AppsDirectoryName))
 	assert.NilError(t, err)
 

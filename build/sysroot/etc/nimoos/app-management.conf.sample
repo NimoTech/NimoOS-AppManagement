@@ -1,0 +1,13 @@
+[common]
+RuntimePath = /var/run/nimoos
+
+[app]
+LogPath = /var/log/nimoos/
+LogSaveName = app-management
+LogFileExt = log
+AppStorePath = /var/lib/nimoos/appstore
+AppsPath = /var/lib/nimoos/apps
+
+[server]
+appstore = https://cdn.jsdelivr.net/gh/NimoTech/NimoOS-AppStore@gh-pages/store/main.zip
+appstore = https://github.com/bigbeartechworld/big-bear-nimoos/archive/refs/heads/master.zip

@@ -1,3 +1,5 @@
+# DISABLED: This workflow requires ZeroTier/SSH secrets from NimoTech infra.
+# Kept for reference. To re-enable, remove the 'if: false' lines and configure secrets.
 name: Auto Publish Website
 on:
   push:
@@ -7,6 +9,7 @@ permissions:
   contents: write
 jobs:
   goreleaser:
+    if: false
     runs-on: ubuntu-22.04
     steps:
       -
@@ -78,8 +81,8 @@ jobs:
           echo "ping success"
 #       - name: send message
 #         run: |
-#           curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"CasaOS-AppManagement updated"}}' ${{ secrets.SSH_ROBOT_URL }}
+#           curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"NimoOS-AppManagement updated"}}' ${{ secrets.SSH_ROBOT_URL }}
       - name: Error Handling
         if: ${{ failure() }}
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"CasaOS-AppManagement push Error"}}' ${{ secrets.SSH_ROBOT_URL }} 
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"NimoOS-AppManagement push Error"}}' ${{ secrets.SSH_ROBOT_URL }} 

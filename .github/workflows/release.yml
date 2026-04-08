@@ -5,16 +5,16 @@ on:
     tags:
       - v*.*.*
 env:
-  casaos_cache_version: 1.1 # the value define by causal. the field for to clear the GitHub Action cache
+  nimoos_cache_version: 1.1 # the value define by causal. the field for to clear the GitHub Action cache
 
 permissions:
   contents: write
 jobs:
   call-workflow-passing-data:
-    uses: IceWhaleTech/github/.github/workflows/go_release.yml@main
+    uses: NimoTech/github/.github/workflows/go_release.yml@main
     with:
-      project-name: CasaOS-AppManagement
-      file-name: casaos-app-management
+      project-name: NimoOS-AppManagement
+      file-name: nimoos-app-management
     secrets:
       OSS_KEY_ID: ${{ secrets.OSS_KEY_ID }}
       OSS_KEY_SECRET: ${{ secrets.OSS_KEY_SECRET }}

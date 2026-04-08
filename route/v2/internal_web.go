@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/model"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/service"
-	"github.com/IceWhaleTech/CasaOS-Common/utils"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/model"
+	"github.com/NimoTech/NimoOS-AppManagement/service"
+	"github.com/NimoTech/NimoOS-Common/utils"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 	"github.com/compose-spec/compose-go/types"
 	"github.com/docker/compose/v2/pkg/api"
 	"github.com/labstack/echo/v4"
@@ -39,9 +39,9 @@ func (a *AppManagement) GetAppGrid(ctx echo.Context) error {
 	})
 
 	// v1 Apps
-	casaOSApps, containers := service.MyService.Docker().GetContainerAppList(nil, nil, nil)
+	nimoOSApps, containers := service.MyService.Docker().GetContainerAppList(nil, nil, nil)
 
-	v1AppGridItems := lo.Map(*casaOSApps, func(app model.MyAppList, i int) codegen.WebAppGridItem {
+	v1AppGridItems := lo.Map(*nimoOSApps, func(app model.MyAppList, i int) codegen.WebAppGridItem {
 		item, err := WebAppGridItemAdapterV1(&app)
 		if err != nil {
 			logger.Error("failed to adapt web app grid item", zap.Error(err), zap.String("app", app.Name))

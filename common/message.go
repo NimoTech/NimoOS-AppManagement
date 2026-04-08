@@ -1,8 +1,8 @@
 package common
 
 import (
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen/message_bus"
-	"github.com/IceWhaleTech/CasaOS-Common/utils"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen/message_bus"
+	"github.com/NimoTech/NimoOS-Common/utils"
 )
 
 // common properties

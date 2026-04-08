@@ -9,19 +9,19 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/config"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/docker"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/service"
-	"github.com/IceWhaleTech/CasaOS-Common/utils"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/docker"
+	"github.com/NimoTech/NimoOS-AppManagement/service"
+	"github.com/NimoTech/NimoOS-Common/utils"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 	"github.com/labstack/echo/v4"
 	"github.com/samber/lo"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 
-	pkg_utils "github.com/IceWhaleTech/CasaOS-AppManagement/pkg/utils"
+	pkg_utils "github.com/NimoTech/NimoOS-AppManagement/pkg/utils"
 )
 
 func (a *AppManagement) AppStoreList(ctx echo.Context) error {
@@ -33,7 +33,7 @@ func (a *AppManagement) AppStoreList(ctx echo.Context) error {
 }
 
 // the method should be deprecated
-// but it be used by CasaOS
+// but it be used by NimoOS
 func (a *AppManagement) RegisterAppStore(ctx echo.Context, params codegen.RegisterAppStoreParams) error {
 	if params.Url == nil || *params.Url == "" {
 		message := "appstore url is required"
@@ -392,7 +392,7 @@ func FilterCatalogByCategory(catalog map[string]*service.ComposeApp, category st
 func FilterCatalogByAuthorType(catalog map[string]*service.ComposeApp, authorType codegen.StoreAppAuthorType) map[string]*service.ComposeApp {
 	if !lo.Contains([]codegen.StoreAppAuthorType{
 		codegen.Official,
-		codegen.ByCasaos,
+		codegen.ByNimoos,
 		codegen.Community,
 	}, authorType) {
 		logger.Info("warning: unknown author type - returning empty catalog", zap.String("authorType", string(authorType)))

@@ -1,9 +1,9 @@
 package pkg
 
 import (
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/service"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/service"
 	"github.com/compose-spec/compose-go/loader"
 )
 
@@ -17,9 +17,9 @@ func VaildDockerCompose(yaml []byte) (err error) {
 	}()
 	docker, err := service.NewComposeAppFromYAML(yaml, false, false)
 
-	ex, ok := docker.Extensions[common.ComposeExtensionNameXCasaOS]
+	ex, ok := docker.Extensions[common.ComposeExtensionNameXNimoOS]
 	if !ok {
-		return service.ErrComposeExtensionNameXCasaOSNotFound
+		return service.ErrComposeExtensionNameXNimoOSNotFound
 	}
 
 	var storeInfo codegen.ComposeAppStoreInfo

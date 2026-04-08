@@ -2,9 +2,9 @@
  *@Date: 2022-07-12 09:48:56
  *@LastEditors: LinkLeong
  *@LastEditTime: 2022-09-02 22:10:05
- *@FilePath: /CasaOS/service/service.go
+ *@FilePath: /NimoOS/service/service.go
  *@Description:
- *@Website: https://www.casaos.io
+ *@Website: https://www.nimoos.io
  *Copyright (c) 2022 by icewhale, All Rights Reserved.
  */
 package service
@@ -14,11 +14,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen/message_bus"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/config"
-	"github.com/IceWhaleTech/CasaOS-Common/external"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen/message_bus"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
+	"github.com/NimoTech/NimoOS-Common/external"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 	jsoniter "github.com/json-iterator/go"
 	"go.uber.org/zap"
 )

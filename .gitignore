@@ -18,7 +18,8 @@ dist/
 target/
 codegen/
 __debug_bin
-CasaOS-AppManagement 
+NimoOS-AppManagement
+nimoos-app-management
 
 # node_modules
 node_modules

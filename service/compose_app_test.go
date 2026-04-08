@@ -5,10 +5,10 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/docker"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/service"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/docker"
+	"github.com/NimoTech/NimoOS-AppManagement/service"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 	"go.uber.org/goleak"
 	"gotest.tools/v3/assert"
 )

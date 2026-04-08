@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 	"github.com/compose-spec/compose-go/loader"
 	"github.com/compose-spec/compose-go/types"
 )
@@ -13,10 +13,10 @@ type App types.ServiceConfig
 func (a *App) StoreInfo() (codegen.AppStoreInfo, error) {
 	var storeInfo codegen.AppStoreInfo
 
-	ex, ok := a.Extensions[common.ComposeExtensionNameXCasaOS]
+	ex, ok := a.Extensions[common.ComposeExtensionNameXNimoOS]
 	if !ok {
-		logger.Error("extension `x-casaos` not found")
-		// return storeInfo, ErrComposeExtensionNameXCasaOSNotFound
+		logger.Error("extension `x-nimoos` not found")
+		// return storeInfo, ErrComposeExtensionNameXNimoOSNotFound
 	}
 
 	// add image to store info for check stable version function.

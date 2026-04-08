@@ -2,16 +2,17 @@ package v2
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/service"
-	"github.com/IceWhaleTech/CasaOS-Common/utils"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/service"
+	"github.com/NimoTech/NimoOS-Common/utils"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 	"github.com/compose-spec/compose-go/types"
 	"github.com/labstack/echo/v4"
 	"github.com/samber/lo"
@@ -345,7 +346,7 @@ func (a *AppManagement) InstallComposeApp(ctx echo.Context, params codegen.Insta
 		logger.Error("failed to start compose app installation", zap.Error(err))
 
 		message := err.Error()
-		if err == service.ErrComposeExtensionNameXCasaOSNotFound {
+		if err == service.ErrComposeExtensionNameXNimoOSNotFound {
 			return ctx.JSON(http.StatusBadRequest, codegen.ResponseBadRequest{Message: &message})
 		}
 
@@ -617,12 +618,21 @@ func YAMLfromRequest(ctx echo.Context) ([]byte, error) {
 		buf = _buf
 
 	default:
-		var c codegen.ComposeApp
-		if err := ctx.Bind(&c); err != nil {
+		// Read body as raw bytes and convert JSON → generic map → YAML.
+		// Direct binding into types.Project fails because types.External has
+		// MarshalJSON (emits bool) but no UnmarshalJSON, so the standard JSON
+		// decoder rejects "external": false for a struct field.
+		body, err := io.ReadAll(ctx.Request().Body)
+		if err != nil {
 			return nil, err
 		}
 
-		_buf, err := yaml.Marshal(c)
+		var generic interface{}
+		if err := json.Unmarshal(body, &generic); err != nil {
+			return nil, err
+		}
+
+		_buf, err := yaml.Marshal(generic)
 		if err != nil {
 			return nil, err
 		}
@@ -635,7 +645,7 @@ func YAMLfromRequest(ctx echo.Context) ([]byte, error) {
 type composeAppsWithStoreInfoOpts struct {
 	checkIsUpdateAvailable bool
 	// The /web/appgrid endpoint does not require information about whether the application can be updated, so we added an option.
-	// This endpoint is called as soon as CasaOS is opened, and we don't have time to cache it in advance.
+	// This endpoint is called as soon as NimoOS is opened, and we don't have time to cache it in advance.
 	// We must ensure that this endpoint responds as quickly as possible.
 }
 
@@ -690,7 +700,7 @@ func composeAppsWithStoreInfo(ctx context.Context, opts composeAppsWithStoreInfo
 			return composeAppWithStoreInfo
 		}
 
-		isUncontrolled, ok := composeApp.Extensions[common.ComposeExtensionNameXCasaOS].(map[string]interface{})[common.ComposeExtensionPropertyNameIsUncontrolled].(bool)
+		isUncontrolled, ok := composeApp.Extensions[common.ComposeExtensionNameXNimoOS].(map[string]interface{})[common.ComposeExtensionPropertyNameIsUncontrolled].(bool)
 		if ok {
 			composeAppWithStoreInfo.IsUncontrolled = &isUncontrolled
 		}

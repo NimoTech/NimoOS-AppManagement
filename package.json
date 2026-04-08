@@ -1,6 +1,6 @@
 {
-  "name": "@icewhale/casaos-appmanagement-openapi",
-  "version": "0.0.1",
+  "name": "@nimotech/nimoos-appmanagement-openapi",
+  "version": "0.4.10-alpha2",
   "scripts": {
     "clean": "rm -rf generate",
     "build": "rm -rf dist && tsc && yarn clean",
@@ -9,12 +9,12 @@
     "generate:ts": "npx openapi-typescript-codegen --input ./api/app_management/openapi.yaml --output ./generate",
     "start": "yarn generate:local && yarn build"
   },
-  "homepage": "https://github.com/IceWhaleTech/CasaOS-AppManagement#readme",
-  "description": "Casaos-AppManagement Typescript+Axios SDK",
+  "homepage": "https://github.com/NimoTech/NimoOS-AppManagement#readme",
+  "description": "Nimoos-AppManagement Typescript+Axios SDK",
   "keywords": [
-    "CasaOS-AppManagement",
+    "NimoOS-AppManagement",
     "SDK",
-    "CasaOS-AppManagement Axios"
+    "NimoOS-AppManagement Axios"
   ],
   "main": "dist/index.js",
   "files": [
@@ -32,6 +32,6 @@
     "openapi-typescript-codegen": "^0.23.0",
     "typescript": "^4.9.5"
   },
-  "author": "casaos",
+  "author": "nimoos",
   "license": "Apache-2.0"
 }

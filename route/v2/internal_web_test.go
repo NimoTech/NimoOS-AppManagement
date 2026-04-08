@@ -5,13 +5,13 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/docker"
-	v2 "github.com/IceWhaleTech/CasaOS-AppManagement/route/v2"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/service"
-	"github.com/IceWhaleTech/CasaOS-Common/utils"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/file"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/docker"
+	v2 "github.com/NimoTech/NimoOS-AppManagement/route/v2"
+	"github.com/NimoTech/NimoOS-AppManagement/service"
+	"github.com/NimoTech/NimoOS-Common/utils"
+	"github.com/NimoTech/NimoOS-Common/utils/file"
 	"go.uber.org/goleak"
 	"gotest.tools/v3/assert"
 )
@@ -62,6 +62,6 @@ func TestWebAppGridItemAdapter(t *testing.T) {
 	assert.Equal(t, *gridItem.Index, storeInfo.Index)
 	assert.Equal(t, *gridItem.Status, "running")
 	assert.DeepEqual(t, *gridItem.Title, storeInfo.Title)
-	assert.Equal(t, *gridItem.AuthorType, codegen.ByCasaos)
+	assert.Equal(t, *gridItem.AuthorType, codegen.ByNimoos)
 	assert.Equal(t, *gridItem.IsUncontrolled, false)
 }

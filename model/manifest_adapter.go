@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
 	"github.com/compose-spec/compose-go/types"
 	"github.com/samber/lo"
 )
@@ -154,7 +154,7 @@ func (c *CustomizationPostData) Services() types.Services {
 			Volumes:     c.Volumes.ServiceVolumeConfigList(),
 
 			Extensions: map[string]interface{}{
-				common.ComposeExtensionNameXCasaOS: c.AppStoreInfo(),
+				common.ComposeExtensionNameXNimoOS: c.AppStoreInfo(),
 			},
 		},
 	}
@@ -165,7 +165,7 @@ func (c *CustomizationPostData) Compose() codegen.ComposeApp {
 		Name:     strings.ToLower(c.ContainerName),
 		Services: c.Services(),
 		Extensions: map[string]interface{}{
-			common.ComposeExtensionNameXCasaOS: c.ComposeAppStoreInfo(),
+			common.ComposeExtensionNameXNimoOS: c.ComposeAppStoreInfo(),
 		},
 	}
 }

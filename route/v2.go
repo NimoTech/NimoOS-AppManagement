@@ -7,12 +7,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/codegen"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/pkg/config"
+	"github.com/NimoTech/NimoOS-AppManagement/codegen"
+	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
 
-	v2Route "github.com/IceWhaleTech/CasaOS-AppManagement/route/v2"
-	"github.com/IceWhaleTech/CasaOS-Common/external"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/jwt"
+	v2Route "github.com/NimoTech/NimoOS-AppManagement/route/v2"
+	"github.com/NimoTech/NimoOS-Common/external"
+	"github.com/NimoTech/NimoOS-Common/utils/jwt"
 	"github.com/deepmap/oapi-codegen/pkg/middleware"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3filter"

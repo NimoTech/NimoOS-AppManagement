@@ -8,9 +8,9 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	"github.com/IceWhaleTech/CasaOS-AppManagement/model"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/model"
+	"github.com/NimoTech/NimoOS-Common/utils/logger"
 )
 
 const (

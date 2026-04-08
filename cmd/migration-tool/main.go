@@ -6,19 +6,19 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/IceWhaleTech/CasaOS-AppManagement/common"
-	interfaces "github.com/IceWhaleTech/CasaOS-Common"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/systemctl"
+	"github.com/NimoTech/NimoOS-AppManagement/common"
+	interfaces "github.com/NimoTech/NimoOS-Common"
+	"github.com/NimoTech/NimoOS-Common/utils/systemctl"
 )
 
 const (
-	appManagementConfigDirPath  = "/etc/casaos"
-	appManagementConfigFilePath = "/etc/casaos/app-management.conf"
-	appManagementName           = "casaos-app-management.service"
+	appManagementConfigDirPath  = "/etc/nimoos"
+	appManagementConfigFilePath = "/etc/nimoos/app-management.conf"
+	appManagementName           = "nimoos-app-management.service"
 	appManagementNameShort      = "app-management"
 )
 
-//go:embedded ../../build/sysroot/etc/casaos/app-management.conf.sample
+//go:embedded ../../build/sysroot/etc/nimoos/app-management.conf.sample
 //var _appManagementConfigFileSample string
 
 var (

@@ -1,6 +1,6 @@
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
-project_name: casaos-app-management
+project_name: nimoos-app-management
 before:
   hooks:
     - go generate
@@ -8,8 +8,8 @@ before:
     - go mod tidy
     - go test -race -v ./... -timeout 30m
 builds:
-  - id: casaos-app-management-amd64
-    binary: build/sysroot/usr/bin/casaos-app-management
+  - id: nimoos-app-management-amd64
+    binary: build/sysroot/usr/bin/nimoos-app-management
     env:
       - CC=x86_64-linux-gnu-gcc
     gcflags:
@@ -28,10 +28,10 @@ builds:
       - amd64
     hooks:
       post:
-        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/IceWhaleTech/CasaOS-AppManagement/cmd/appfile2compose
+        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/NimoTech/NimoOS-AppManagement/cmd/appfile2compose
           output: true
-  - id: casaos-app-management-arm64
-    binary: build/sysroot/usr/bin/casaos-app-management
+  - id: nimoos-app-management-arm64
+    binary: build/sysroot/usr/bin/nimoos-app-management
     env:
       - CC=aarch64-linux-gnu-gcc
     gcflags:
@@ -50,10 +50,10 @@ builds:
       - arm64
     hooks:
       post:
-        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/IceWhaleTech/CasaOS-AppManagement/cmd/appfile2compose
+        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/NimoTech/NimoOS-AppManagement/cmd/appfile2compose
           output: true
-  - id: casaos-app-management-arm-7
-    binary: build/sysroot/usr/bin/casaos-app-management
+  - id: nimoos-app-management-arm-7
+    binary: build/sysroot/usr/bin/nimoos-app-management
     env:
       - CC=arm-linux-gnueabihf-gcc
     gcflags:
@@ -74,10 +74,10 @@ builds:
       - "7"
     hooks:
       post:
-        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/IceWhaleTech/CasaOS-AppManagement/cmd/appfile2compose
+        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/NimoTech/NimoOS-AppManagement/cmd/appfile2compose
           output: true
-  - id: casaos-app-management-riscv64
-    binary: build/sysroot/usr/bin/casaos-app-management
+  - id: nimoos-app-management-riscv64
+    binary: build/sysroot/usr/bin/nimoos-app-management
     env:
       - CC=riscv64-linux-gnu-gcc
     gcflags:
@@ -96,10 +96,10 @@ builds:
       - riscv64
     hooks:
       post:
-        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/IceWhaleTech/CasaOS-AppManagement/cmd/appfile2compose
+        - cmd: go build -v -tags 'musl netgo osusergo' -o build/sysroot/usr/bin/appfile2compose github.com/NimoTech/NimoOS-AppManagement/cmd/appfile2compose
           output: true
-  - id: casaos-app-management-migration-tool-amd64
-    binary: build/sysroot/usr/bin/casaos-app-management-migration-tool
+  - id: nimoos-app-management-migration-tool-amd64
+    binary: build/sysroot/usr/bin/nimoos-app-management-migration-tool
     main: ./cmd/migration-tool
     env:
       - CC=x86_64-linux-gnu-gcc
@@ -117,8 +117,8 @@ builds:
       - linux
     goarch:
       - amd64
-  - id: casaos-app-management-migration-tool-arm64
-    binary: build/sysroot/usr/bin/casaos-app-management-migration-tool
+  - id: nimoos-app-management-migration-tool-arm64
+    binary: build/sysroot/usr/bin/nimoos-app-management-migration-tool
     main: ./cmd/migration-tool
     env:
       - CC=aarch64-linux-gnu-gcc
@@ -136,8 +136,8 @@ builds:
       - linux
     goarch:
       - arm64
-  - id: casaos-app-management-migration-tool-arm-7
-    binary: build/sysroot/usr/bin/casaos-app-management-migration-tool
+  - id: nimoos-app-management-migration-tool-arm-7
+    binary: build/sysroot/usr/bin/nimoos-app-management-migration-tool
     main: ./cmd/migration-tool
     env:
       - CC=arm-linux-gnueabihf-gcc
@@ -157,8 +157,8 @@ builds:
       - arm
     goarm:
       - "7"
-  - id: casaos-app-management-migration-tool-riscv64
-    binary: build/sysroot/usr/bin/casaos-app-management-migration-tool
+  - id: nimoos-app-management-migration-tool-riscv64
+    binary: build/sysroot/usr/bin/nimoos-app-management-migration-tool
     main: ./cmd/migration-tool
     env:
       - CC=riscv64-linux-gnu-gcc
@@ -179,22 +179,22 @@ builds:
 archives:
   - name_template: >-
       {{ .Os }}-{{- if eq .Arch "arm" }}arm-7{{- else }}{{ .Arch }}{{- end }}-{{ .ProjectName }}-v{{ .Version }}
-    id: casaos-app-management
+    id: nimoos-app-management
     builds:
-      - casaos-app-management-amd64
-      - casaos-app-management-arm64
-      - casaos-app-management-arm-7
-      - casaos-app-management-riscv64
+      - nimoos-app-management-amd64
+      - nimoos-app-management-arm64
+      - nimoos-app-management-arm-7
+      - nimoos-app-management-riscv64
     files:
       - build/**/*
   - name_template: >-
       {{ .Os }}-{{- if eq .Arch "arm" }}arm-7{{- else }}{{ .Arch }}{{- end }}-{{ .ProjectName }}-migration-tool-v{{ .Version }}
-    id: casaos-app-management-migration-tool
+    id: nimoos-app-management-migration-tool
     builds:
-      - casaos-app-management-migration-tool-amd64
-      - casaos-app-management-migration-tool-arm64
-      - casaos-app-management-migration-tool-arm-7
-      - casaos-app-management-migration-tool-riscv64
+      - nimoos-app-management-migration-tool-amd64
+      - nimoos-app-management-migration-tool-arm64
+      - nimoos-app-management-migration-tool-arm-7
+      - nimoos-app-management-migration-tool-riscv64
     files:
       - build/sysroot/etc/**/*
 checksum:
@@ -209,8 +209,8 @@ changelog:
       - "^test:"
 release:
   github:
-    owner: IceWhaleTech
-    name: CasaOS-AppManagement
+    owner: NimoTech
+    name: NimoOS-AppManagement
   draft: true
   prerelease: auto
   mode: replace
