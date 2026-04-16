@@ -3,6 +3,8 @@ package v1
 import (
 	"context"
 	"net/http"
+	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -567,18 +569,49 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 		}
 	}
 
+	// 获取当前 Docker 数据目录（迁移源）
+	oldRoot := dockerConfig.Root
+	if oldRoot == "" {
+		oldRoot = "/var/lib/docker" // Docker 默认路径
+	}
+
 	dockerRootDir := value.(string)
+	var newRoot string
 	if dockerRootDir == "/" {
 		dockerConfig.Root = "" // omitempty - empty string will not be serialized
+		newRoot = "/var/lib/docker"
 	} else {
 		if !file.Exists(dockerRootDir) {
 			return ctx.JSON(http.StatusBadRequest, &modelCommon.Result{Success: common_err.CLIENT_ERROR, Message: common_err.GetMsg(common_err.DIR_NOT_EXISTS), Data: common_err.GetMsg(common_err.DIR_NOT_EXISTS)})
 		}
 
-		dockerConfig.Root = filepath.Join(dockerRootDir, "docker")
+		newRoot = filepath.Join(dockerRootDir, "docker")
+		dockerConfig.Root = newRoot
 
-		if err := file.IsNotExistMkDir(dockerConfig.Root); err != nil {
-			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to create " + dockerConfig.Root, Data: err})
+		if err := file.IsNotExistMkDir(newRoot); err != nil {
+			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to create " + newRoot, Data: err})
+		}
+	}
+
+	// 路径未变化则跳过迁移
+	if oldRoot == newRoot {
+		return ctx.JSON(http.StatusOK, &modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: request})
+	}
+
+	// 停止 Docker，迁移数据，再重启
+	if err := systemctl.StopService("docker"); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to stop docker service"})
+	}
+
+	// 将旧目录数据 rsync 到新目录
+	if file.Exists(oldRoot) {
+		cmd := exec.Command("rsync", "-a", "--ignore-existing", oldRoot+"/", newRoot+"/")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			// 迁移失败则回滚：重启 Docker 保持原状
+			_ = systemctl.StartService("docker")
+			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to migrate docker data: " + err.Error()})
 		}
 	}
 
@@ -602,10 +635,6 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 
 	if err := systemctl.ReloadDaemon(); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to reload systemd daemon"})
-	}
-
-	if err := systemctl.StopService("docker"); err != nil {
-		return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to stop docker service"})
 	}
 
 	if err := systemctl.StartService("docker"); err != nil {
