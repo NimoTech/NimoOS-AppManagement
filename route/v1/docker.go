@@ -1,11 +1,13 @@
 package v1
 
 import (
+	"bufio"
 	"context"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -605,14 +607,54 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 
 	// 将旧目录数据 rsync 到新目录
 	if file.Exists(oldRoot) {
-		cmd := exec.Command("rsync", "-a", "--ignore-existing", oldRoot+"/", newRoot+"/")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
-			// 迁移失败则回滚：重启 Docker 保持原状
+		go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationBegin, nil)
+
+		cmd := exec.Command("rsync", "-a", "--info=progress2", "--ignore-existing", oldRoot+"/", newRoot+"/")
+		
+		stdoutPipe, err := cmd.StdoutPipe()
+		if err != nil {
+			go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationError, map[string]string{
+				common.PropertyTypeMessage.Name: "error creating stdout pipe: " + err.Error(),
+			})
 			_ = systemctl.StartService("docker")
+			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error creating stdout pipe"})
+		}
+		
+		cmd.Stderr = os.Stderr
+
+		if err := cmd.Start(); err != nil {
+			_ = systemctl.StartService("docker")
+			go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationError, map[string]string{
+				common.PropertyTypeMessage.Name: "error when trying to start rsync: " + err.Error(),
+			})
 			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to migrate docker data: " + err.Error()})
 		}
+
+		go func() {
+			scanner := bufio.NewScanner(stdoutPipe)
+			// matching the xx% explicitly
+			progressRe := regexp.MustCompile(`\s+(\d+)%\s+`)
+			for scanner.Scan() {
+				line := scanner.Text()
+				matches := progressRe.FindStringSubmatch(line)
+				if len(matches) > 1 {
+					service.PublishEventWrapper(context.Background(), common.EventTypeDockerMigrationProgress, map[string]string{
+						common.PropertyTypeAppProgress.Name: matches[1],
+					})
+				}
+			}
+		}()
+
+		if err := cmd.Wait(); err != nil {
+			// 迁移失败则回滚：重启 Docker 保持原状
+			_ = systemctl.StartService("docker")
+			go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationError, map[string]string{
+				common.PropertyTypeMessage.Name: "error when trying to wait rsync: " + err.Error(),
+			})
+			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to migrate docker data: " + err.Error()})
+		}
+		
+		go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationEnd, nil)
 	}
 
 	buf, err := json.Marshal(request)

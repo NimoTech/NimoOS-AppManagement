@@ -103,6 +103,9 @@ var EventTypes = []message_bus.EventType{
 	EventTypeContainerStopBegin, EventTypeContainerStopEnd, EventTypeContainerStopError,
 	EventTypeContainerRenameBegin, EventTypeContainerRenameEnd, EventTypeContainerRenameError,
 	EventTypeContainerRemoveBegin, EventTypeContainerRemoveEnd, EventTypeContainerRemoveError,
+
+	// docker migration
+	EventTypeDockerMigrationBegin, EventTypeDockerMigrationProgress, EventTypeDockerMigrationEnd, EventTypeDockerMigrationError,
 }
 
 // event types for app-store
@@ -502,6 +505,37 @@ var (
 		Name:     "docker:container:remove-error",
 		PropertyTypeList: []message_bus.PropertyType{
 			PropertyTypeContainerID,
+			PropertyTypeMessage,
+		},
+	}
+)
+
+// event types for docker migration
+var (
+	EventTypeDockerMigrationBegin = message_bus.EventType{
+		SourceID:         AppManagementServiceName,
+		Name:             "docker:migration-begin",
+		PropertyTypeList: []message_bus.PropertyType{},
+	}
+
+	EventTypeDockerMigrationProgress = message_bus.EventType{
+		SourceID: AppManagementServiceName,
+		Name:     "docker:migration-progress",
+		PropertyTypeList: []message_bus.PropertyType{
+			PropertyTypeAppProgress,
+		},
+	}
+
+	EventTypeDockerMigrationEnd = message_bus.EventType{
+		SourceID:         AppManagementServiceName,
+		Name:             "docker:migration-end",
+		PropertyTypeList: []message_bus.PropertyType{},
+	}
+
+	EventTypeDockerMigrationError = message_bus.EventType{
+		SourceID: AppManagementServiceName,
+		Name:     "docker:migration-error",
+		PropertyTypeList: []message_bus.PropertyType{
 			PropertyTypeMessage,
 		},
 	}
