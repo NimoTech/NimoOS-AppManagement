@@ -289,6 +289,10 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 			}
 		}
 
+		if m.Labels["nimoos.system"] == "true" {
+			continue
+		}
+
 		if m.Labels["nimoos"] == "nimoos" {
 
 			_, newVersion := NewVersionApp[m.ID]
