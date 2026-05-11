@@ -3,6 +3,7 @@ package route
 import (
 	"crypto/ecdsa"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
@@ -34,6 +35,21 @@ func InitV1Router() http.Handler {
 	e.Use(echo_middleware.Logger())
 
 	v1Group := e.Group("/v1")
+
+	// Block mutating app operations during data migration (Docker is stopped).
+	v1Group.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			method := c.Request().Method
+			if method == http.MethodPost || method == http.MethodPut || method == http.MethodDelete {
+				if _, err := os.Stat(migrationLockFile); err == nil {
+					return c.JSON(http.StatusServiceUnavailable, map[string]string{
+						"message": "A data migration is in progress. Please wait for it to complete before installing or modifying apps.",
+					})
+				}
+			}
+			return next(c)
+		}
+	})
 
 	v1Group.Use(echo_middleware.JWTWithConfig(echo_middleware.JWTConfig{
 		Skipper: func(c echo.Context) bool {

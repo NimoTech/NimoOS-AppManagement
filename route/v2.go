@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 
@@ -19,6 +20,8 @@ import (
 	"github.com/labstack/echo/v4"
 	echo_middleware "github.com/labstack/echo/v4/middleware"
 )
+
+const migrationLockFile = "/var/run/nimoos/migration.lock"
 
 var (
 	_swagger *openapi3.T
@@ -108,6 +111,23 @@ func InitV2Router() http.Handler {
 	e.Use(middleware.OapiRequestValidatorWithOptions(_swagger, &middleware.Options{
 		Options: openapi3filter.Options{AuthenticationFunc: openapi3filter.NoopAuthenticationFunc},
 	}))
+
+	// Block install / uninstall / update / state-change requests while a data
+	// migration is in progress. Docker is stopped during migration, so these
+	// operations would fail anyway — reject early with a clear message instead.
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			method := c.Request().Method
+			if method == http.MethodPost || method == http.MethodPut || method == http.MethodDelete {
+				if _, err := os.Stat(migrationLockFile); err == nil {
+					return c.JSON(http.StatusServiceUnavailable, map[string]string{
+						"message": "A data migration is in progress. Please wait for it to complete before installing or modifying apps.",
+					})
+				}
+			}
+			return next(c)
+		}
+	})
 
 	codegen.RegisterHandlersWithBaseURL(e, appManagement, V2APIPath)
 
