@@ -29,6 +29,10 @@ func (a *AppManagement) GetAppGrid(ctx echo.Context) error {
 	}
 
 	v2AppGridItems := lo.FilterMap(lo.Values(composeAppsWithStoreInfo), func(app codegen.ComposeAppWithStoreInfo, i int) (codegen.WebAppGridItem, bool) {
+		if isSystemComposeApp(app.Compose) {
+			return codegen.WebAppGridItem{}, false
+		}
+
 		item, err := WebAppGridItemAdapterV2(&app)
 		if err != nil {
 			logger.Error("failed to adapt web app grid item", zap.Error(err), zap.String("app", app.Compose.Name))
@@ -193,6 +197,21 @@ func WebAppGridItemAdapterV1(app *model.MyAppList) (*codegen.WebAppGridItem, err
 	}
 
 	return item, nil
+}
+
+// isSystemComposeApp reports whether a compose project is a NimoOS-internal
+// component (e.g. the ML backend behind built-in Photos) and should be hidden
+// from the user-facing App Panel. Marked via service label `nimoos.system: "true"`.
+func isSystemComposeApp(p *codegen.ComposeApp) bool {
+	if p == nil {
+		return false
+	}
+	for _, svc := range p.Services {
+		if svc.Labels["nimoos.system"] == "true" {
+			return true
+		}
+	}
+	return false
 }
 
 func WebAppGridItemAdapterContainer(container *model.MyAppList) (*codegen.WebAppGridItem, error) {

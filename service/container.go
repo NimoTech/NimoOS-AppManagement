@@ -142,6 +142,9 @@ func getContainerStats() {
 
 				dockerStats.Data = data
 				dockerStats.Title = strings.ReplaceAll(v.Names[0], "/", "")
+				if displayName, ok := v.Labels["nimoos.display_name"]; ok && displayName != "" {
+					dockerStats.Title = displayName
+				}
 
 				// @tiger - 不建议直接把依赖的数据结构封装返回。
 				//          如果依赖的数据结构有变化，应该在这里适配或者保存，这样更加对客户端负责
