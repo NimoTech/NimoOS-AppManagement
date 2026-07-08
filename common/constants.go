@@ -2,7 +2,6 @@ package common
 
 const (
 	AppManagementServiceName = "app-management"
-	AppManagementVersion     = "1.9.2-alpha1"
 
 	AppsDirectoryName = "Apps"
 
@@ -30,6 +29,9 @@ const (
 	CategoryListFileName  = "category-list.json"
 	RecommendListFileName = "recommend-list.json"
 )
+
+// AppManagementVersion is injected at build time via -ldflags; defaults to "dev".
+var AppManagementVersion = "dev"
 
 // the tags can add more. like "latest", "stable", "edge", "beta", "alpha"
 var NeedCheckDigestTags = []string{"latest"}
