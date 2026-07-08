@@ -6,9 +6,11 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/NimoTech/NimoOS-AppManagement/common"
 	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
 	v1 "github.com/NimoTech/NimoOS-AppManagement/route/v1"
 	"github.com/NimoTech/NimoOS-Common/external"
+	middleware "github.com/NimoTech/NimoOS-Common/middleware"
 	"github.com/NimoTech/NimoOS-Common/utils/jwt"
 	"github.com/labstack/echo/v4"
 	echo_middleware "github.com/labstack/echo/v4/middleware"
@@ -33,6 +35,8 @@ func InitV1Router() http.Handler {
 	e.Use(echo_middleware.Gzip())
 	e.Use(echo_middleware.Recover())
 	e.Use(echo_middleware.Logger())
+
+	middleware.RegisterVersionRoute(e, "/v1/apps/version", "App Management", common.AppManagementVersion)
 
 	v1Group := e.Group("/v1")
 
