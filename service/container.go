@@ -343,6 +343,7 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 				Created:  m.Created,
 			}
 
+			ApplyDesktopMeta(&localApp, m.Labels)
 			localApps = append(localApps, localApp)
 		}
 	}

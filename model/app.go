@@ -87,6 +87,12 @@ type MyAppList struct {
 	Created        int64  `json:"created"`
 	AppStoreID     uint   `json:"appstore_id"`
 	IsUncontrolled bool   `json:"is_uncontrolled"`
+	// nimoos.* 桌面接入 label(spec 2026-07-15-desktop-app-recognition)
+	Desktop      bool   `json:"desktop"`
+	DesktopTitle string `json:"desktop_title"`
+	WidgetPath   string `json:"widget_path"`
+	WidgetW      int    `json:"widget_w"`
+	WidgetH      int    `json:"widget_h"`
 }
 
 type Ports struct {
