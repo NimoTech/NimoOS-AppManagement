@@ -1772,3 +1772,24 @@ components:
         is_uncontrolled:
           type: boolean
           example: false
+        desktop:
+          description: true when the container declares nimoos.enable=true (desktop label spec)
+          type: boolean
+          example: false
+        widget:
+          $ref: "#/components/schemas/WebAppGridItemWidget"
+
+    WebAppGridItemWidget:
+      description: widget declared via nimoos.widget.* labels (internal use ONLY)
+      required:
+        - path
+      properties:
+        path:
+          type: string
+          example: /widget
+        w:
+          type: integer
+          example: 2
+        h:
+          type: integer
+          example: 2
