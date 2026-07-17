@@ -93,6 +93,10 @@ type MyAppList struct {
 	WidgetPath   string `json:"widget_path"`
 	WidgetW      int    `json:"widget_w"`
 	WidgetH      int    `json:"widget_h"`
+	WidgetMinW   int    `json:"widget_minw"`
+	WidgetMinH   int    `json:"widget_minh"`
+	WidgetMaxW   int    `json:"widget_maxw"`
+	WidgetMaxH   int    `json:"widget_maxh"`
 }
 
 type Ports struct {

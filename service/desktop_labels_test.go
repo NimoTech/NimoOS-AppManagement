@@ -13,10 +13,12 @@ func TestApplyDesktopMeta(t *testing.T) {
 			"nimoos.enable": "true", "nimoos.title": "下载器",
 			"nimoos.icon": "/icon.png", "nimoos.port": "8080",
 			"nimoos.widget.path": "/widget", "nimoos.widget.w": "3", "nimoos.widget.h": "2",
+			"nimoos.widget.minw": "3", "nimoos.widget.maxw": "4",
 		})
 		if !app.Desktop || app.DesktopTitle != "下载器" || app.Icon != "/icon.png" ||
 			app.Port != "8080" || app.Index != "/" || app.Protocol != "http" ||
-			app.WidgetPath != "/widget" || app.WidgetW != 3 || app.WidgetH != 2 {
+			app.WidgetPath != "/widget" || app.WidgetW != 3 || app.WidgetH != 2 ||
+			app.WidgetMinW != 3 || app.WidgetMaxW != 4 || app.WidgetMinH != 0 || app.WidgetMaxH != 0 {
 			t.Fatalf("bad apply: %+v", app)
 		}
 		if app.Name != "my-container" {
@@ -87,6 +89,61 @@ func TestParseDesktopLabels(t *testing.T) {
 		}
 		if m.WidgetH != -1 {
 			t.Fatalf("h=-1 parses to -1 (前端夹紧), got %d", m.WidgetH)
+		}
+	})
+
+	t.Run("自定义尺寸范围四 label", func(t *testing.T) {
+		m := ParseDesktopLabels(map[string]string{
+			"nimoos.enable":      "true",
+			"nimoos.widget.path": "/widget",
+			"nimoos.widget.minw": "3", "nimoos.widget.minh": "2",
+			"nimoos.widget.maxw": "4", "nimoos.widget.maxh": "3",
+		})
+		if m.WidgetMinW != 3 || m.WidgetMinH != 2 || m.WidgetMaxW != 4 || m.WidgetMaxH != 3 {
+			t.Fatalf("bad range: %+v", m)
+		}
+	})
+
+	t.Run("范围 label 缺省为 0(不带字段)", func(t *testing.T) {
+		m := ParseDesktopLabels(map[string]string{
+			"nimoos.enable": "true", "nimoos.widget.path": "/widget",
+		})
+		if m.WidgetMinW != 0 || m.WidgetMinH != 0 || m.WidgetMaxW != 0 || m.WidgetMaxH != 0 {
+			t.Fatalf("expected all-zero range: %+v", m)
+		}
+	})
+
+	t.Run("resize=false 糖:min=max=声明的 w/h", func(t *testing.T) {
+		m := ParseDesktopLabels(map[string]string{
+			"nimoos.enable": "true", "nimoos.widget.path": "/widget",
+			"nimoos.widget.w": "4", "nimoos.widget.h": "3",
+			"nimoos.widget.resize": "false",
+		})
+		if m.WidgetMinW != 4 || m.WidgetMaxW != 4 || m.WidgetMinH != 3 || m.WidgetMaxH != 3 {
+			t.Fatalf("bad sugar: %+v", m)
+		}
+	})
+
+	t.Run("resize=false 糖:w/h 未声明按默认 2×2 锁死", func(t *testing.T) {
+		m := ParseDesktopLabels(map[string]string{
+			"nimoos.enable": "true", "nimoos.widget.path": "/widget",
+			"nimoos.widget.resize": "false",
+		})
+		if m.WidgetMinW != 2 || m.WidgetMaxW != 2 || m.WidgetMinH != 2 || m.WidgetMaxH != 2 {
+			t.Fatalf("bad sugar default: %+v", m)
+		}
+	})
+
+	t.Run("显式 min/max label 优先于 resize=false", func(t *testing.T) {
+		m := ParseDesktopLabels(map[string]string{
+			"nimoos.enable": "true", "nimoos.widget.path": "/widget",
+			"nimoos.widget.w": "3",
+			"nimoos.widget.minw":   "2",
+			"nimoos.widget.resize": "false",
+		})
+		// minw 显式给 2,其余未给的按糖补:maxw=w=3,minh=maxh=2
+		if m.WidgetMinW != 2 || m.WidgetMaxW != 3 || m.WidgetMinH != 2 || m.WidgetMaxH != 2 {
+			t.Fatalf("explicit label must win: %+v", m)
 		}
 	})
 }
