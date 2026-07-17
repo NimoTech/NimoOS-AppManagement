@@ -58,16 +58,16 @@ func ParseDesktopLabels(labels map[string]string) *DesktopLabelMeta {
 		if h0 <= 0 {
 			h0 = 2
 		}
-		if m.WidgetMinW == 0 {
+		if m.WidgetMinW <= 0 {
 			m.WidgetMinW = w0
 		}
-		if m.WidgetMaxW == 0 {
+		if m.WidgetMaxW <= 0 {
 			m.WidgetMaxW = w0
 		}
-		if m.WidgetMinH == 0 {
+		if m.WidgetMinH <= 0 {
 			m.WidgetMinH = h0
 		}
-		if m.WidgetMaxH == 0 {
+		if m.WidgetMaxH <= 0 {
 			m.WidgetMaxH = h0
 		}
 	}

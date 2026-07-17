@@ -134,6 +134,20 @@ func TestParseDesktopLabels(t *testing.T) {
 		}
 	})
 
+	t.Run("resize=false 糖:垃圾负值不应绕过糖填充", func(t *testing.T) {
+		m := ParseDesktopLabels(map[string]string{
+			"nimoos.enable": "true", "nimoos.widget.path": "/widget",
+			"nimoos.widget.w": "3", "nimoos.widget.h": "3",
+			"nimoos.widget.minw":   "-1",
+			"nimoos.widget.resize": "false",
+		})
+		// minw="-1" 解析为 -1(合法 int,不落入 strconv.Atoi 的 err 分支)，
+		// 用 `== 0` 判断会被当作"已显式声明"而绕过糖填充；`<= 0` 才会把它当垃圾值重新填充为 w=3。
+		if m.WidgetMinW != 3 || m.WidgetMaxW != 3 || m.WidgetMinH != 3 || m.WidgetMaxH != 3 {
+			t.Fatalf("negative garbage minw must not bypass sugar fill: %+v", m)
+		}
+	})
+
 	t.Run("显式 min/max label 优先于 resize=false", func(t *testing.T) {
 		m := ParseDesktopLabels(map[string]string{
 			"nimoos.enable": "true", "nimoos.widget.path": "/widget",
