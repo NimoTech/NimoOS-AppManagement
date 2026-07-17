@@ -186,6 +186,7 @@ func WebAppGridItemAdapterV2(composeAppWithStoreInfo *codegen.ComposeAppWithStor
 						W:    utils.Ptr(dm.WidgetW),
 						H:    utils.Ptr(dm.WidgetH),
 					}
+					setWidgetRange(item.Widget, dm.WidgetMinW, dm.WidgetMinH, dm.WidgetMaxW, dm.WidgetMaxH)
 				}
 			}
 			break
@@ -193,6 +194,22 @@ func WebAppGridItemAdapterV2(composeAppWithStoreInfo *codegen.ComposeAppWithStor
 	}
 
 	return item, nil
+}
+
+// setWidgetRange 只在 label 声明了对应值(>0)时带字段——未声明保持无字段,老桌面忽略。
+func setWidgetRange(w *codegen.WebAppGridItemWidget, minw, minh, maxw, maxh int) {
+	if minw > 0 {
+		w.Minw = utils.Ptr(minw)
+	}
+	if minh > 0 {
+		w.Minh = utils.Ptr(minh)
+	}
+	if maxw > 0 {
+		w.Maxw = utils.Ptr(maxw)
+	}
+	if maxh > 0 {
+		w.Maxh = utils.Ptr(maxh)
+	}
 }
 
 func WebAppGridItemAdapterV1(app *model.MyAppList) (*codegen.WebAppGridItem, error) {
@@ -276,6 +293,7 @@ func WebAppGridItemAdapterContainer(container *model.MyAppList) (*codegen.WebApp
 				W:    utils.Ptr(container.WidgetW),
 				H:    utils.Ptr(container.WidgetH),
 			}
+			setWidgetRange(item.Widget, container.WidgetMinW, container.WidgetMinH, container.WidgetMaxW, container.WidgetMaxH)
 		}
 	}
 

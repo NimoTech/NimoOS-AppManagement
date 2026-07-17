@@ -1793,3 +1793,19 @@ components:
         h:
           type: integer
           example: 2
+        minw:
+          description: min resizable width in cells; absent = global default 2
+          type: integer
+          example: 2
+        minh:
+          description: min resizable height in cells; absent = global default 1
+          type: integer
+          example: 1
+        maxw:
+          description: max resizable width in cells; absent = global default 4
+          type: integer
+          example: 4
+        maxh:
+          description: max resizable height in cells; absent = global default 4
+          type: integer
+          example: 4
