@@ -73,6 +73,10 @@ func DockerTerminal(ctx echo.Context) error {
 	}()
 	go func() {
 		ssh.WsWriterCopy(hr.Conn, conn)
+		// 容器侧 EOF(容器停止/exec 退出)时 WsWriterCopy 返回,但 WS 仍然开着:
+		// 浏览器收不到 close、打字进死管道且写错误被忽略,终端假活。
+		// 主动关 WS 让前端立刻收到 close(同时解除下方 WsReaderCopy 的阻塞)。
+		conn.Close()
 	}()
 	ssh.WsReaderCopy(conn, hr.Conn)
 	return nil
