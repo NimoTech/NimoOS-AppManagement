@@ -306,9 +306,11 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 			}
 			if m.Labels["origin"] == "system" {
 				name = strings.Split(m.Image, ":")[0]
-				if len(strings.Split(name, "/")) > 1 {
-					icon = "https://icon.nimoos.io/main/all/" + strings.Split(name, "/")[1] + ".png"
-				}
+				// icon stays empty. This used to build a URL on icon.nimoos.io, a
+				// domain the rename invented and nobody ever registered, so the
+				// result was a broken image. Upstream runs the equivalent service
+				// on icon.casaos.io; pointing at it would make every install fetch
+				// artwork from the project we forked from.
 			}
 
 			nimoOSApp := model.MyAppList{
