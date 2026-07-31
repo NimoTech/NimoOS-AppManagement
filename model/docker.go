@@ -4,7 +4,6 @@
  *@LastEditTime: 2022-07-13 10:49:16
  *@FilePath: /NimoOS/model/docker.go
  *@Description:
- *@Website: https://www.nimoos.io
  *Copyright (c) 2021-2025 IceWhale Technology Co., Ltd.
  *Copyright (c) 2026 NimoTech
  *Licensed under the Apache License, Version 2.0.
