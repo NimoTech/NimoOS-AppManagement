@@ -172,7 +172,7 @@ LogPath = /var/log/nimoos
 
 [server]
 ; 可配置多个第三方商店源（AllowShadows），样例当前指向 CasaOS 上游仓库
-appstore = https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/store/main.zip
+appstore = https://nimoos-public.s3.us-east-2.amazonaws.com/nimoos/appstore/store/main.zip
 appstore = https://github.com/bigbeartechworld/big-bear-casaos/archive/refs/heads/master.zip
 ```
 
