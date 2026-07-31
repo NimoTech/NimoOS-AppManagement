@@ -12,7 +12,7 @@ info:
 
     NimoOS App Management manages app lifecycle, including installing, uninstalling, starting, stopping, setting, etc.
 
-    For issues and discussions, please visit the [GitHub repository](https://github.com/NimoTech/NimoOS) or join [our Discord](https://discord.com/servers/nimo-pc-1461244017105703069).
+    For issues and discussions, please visit the [GitHub repository](https://github.com/NimoTech/NimoOS) or join [our Discord](https://discord.com/invite/8NStGMweZh).
 
 servers:
   - url: /v1/container
