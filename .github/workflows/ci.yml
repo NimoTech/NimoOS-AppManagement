@@ -81,10 +81,6 @@ jobs:
       # Everything skipped below is skipped for a stated reason, so that a
       # red run always means something is genuinely broken.
       #
-      # TestDownload fetches github.com/NimoTech/get, which is private and
-      # on its way to being archived. The test needs a fixture it can
-      # actually reach before it can run here.
-      #
       # All four reach for an app store that does not exist. The CasaOS
       # rename rewrote the hostnames in these tests without checking that
       # anything answers at the new ones: github.com/NimoTech/_appstore is
@@ -101,4 +97,4 @@ jobs:
         working-directory: NimoOS-AppManagement
         env:
           CGO_ENABLED: "0"
-        run: go test -skip '^(TestAppStoreList|TestGetComposeApp|TestGetApp|TestSkipUpdateCatalog)$' $(go list ./... | grep -v -E '/pkg/utils/downloadHelper')
+        run: go test -skip '^(TestAppStoreList|TestGetComposeApp|TestGetApp|TestSkipUpdateCatalog)$' ./...
