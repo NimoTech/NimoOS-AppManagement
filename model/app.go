@@ -17,16 +17,17 @@ const (
 	StateEnumInstalled
 )
 
-// @tiger - 对于用于出参的数据结构，静态信息（例如 title）和
+// @tiger - for response data structures, static info (e.g. title) and
 //
-//	动态信息（例如 state、query_count）应该划分到不同的数据结构中
+//	dynamic info (e.g. state, query_count) should be split into separate structs.
 //
-//	这样的好处是
-//	1 - 多次获取动态信息时可以减少出参复杂度，因为静态信息只获取一次就好
-//	2 - 在未来的迭代中，可以降低维护成本（所有字段都展开放在一个层级维护成本略高）
+//	Benefits:
+//	1 - fetching dynamic info repeatedly stays cheap, since static info only needs to be fetched once
+//	2 - lower maintenance cost going forward (keeping all fields flattened at one level costs more to maintain)
 //
-//	另外，一些针对性字段，例如 Docker 相关的，可以用 map 来保存。
-//	这样在未来增加多态 App，例如 Snap，不需要维护多个结构，或者一个结构保存不必要的字段
+//	Also, some app-type-specific fields (e.g. Docker-related ones) could be kept in a map.
+//	That way, adding polymorphic app types in the future (e.g. Snap) wouldn't require maintaining
+//	multiple structs or a struct carrying unnecessary fields.
 type ServerAppList struct {
 	ID             uint      `gorm:"column:id;primary_key" json:"id"`
 	Title          string    `json:"title"`
@@ -93,28 +94,28 @@ type Ports struct {
 	ContainerPort uint   `json:"container_port"`
 	CommendPort   int    `json:"commend_port"`
 	Desc          string `json:"desc"`
-	Type          int    `json:"type"` //  1:必选 2:可选 3:默认值不必显示 4:系统处理  5:container内容也可编辑
+	Type          int    `json:"type"` //  1:required 2:optional 3:default value need not be shown 4:system-handled  5:container content is also editable
 }
 
 type Volume struct {
 	ContainerPath string `json:"container_path"`
 	Path          string `json:"path"`
 	Desc          string `json:"desc"`
-	Type          int    `json:"type"` //  1:必选 2:可选 3:默认值不必显示 4:系统处理   5:container内容也可编辑
+	Type          int    `json:"type"` //  1:required 2:optional 3:default value need not be shown 4:system-handled   5:container content is also editable
 }
 
 type Envs struct {
 	Name  string `json:"name"`
 	Value string `json:"value"`
 	Desc  string `json:"desc"`
-	Type  int    `json:"type"` //  1:必选 2:可选 3:默认值不必显示 4:系统处理 5:container内容也可编辑
+	Type  int    `json:"type"` //  1:required 2:optional 3:default value need not be shown 4:system-handled 5:container content is also editable
 }
 
 type Devices struct {
 	ContainerPath string `json:"container_path"`
 	Path          string `json:"path"`
 	Desc          string `json:"desc"`
-	Type          int    `json:"type"` //  1:必选 2:可选 3:默认值不必显示 4:系统处理 5:container内容也可编辑
+	Type          int    `json:"type"` //  1:required 2:optional 3:default value need not be shown 4:system-handled 5:container content is also editable
 }
 
 type Strings []string

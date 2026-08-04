@@ -17,7 +17,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// 检查镜像是否存在
+// Check whether the image exists
 func (ds *dockerService) IsExistImage(imageName string) bool {
 	cli, err := client2.NewClientWithOpts(client2.FromEnv, client2.WithAPIVersionNegotiation())
 	if err != nil {
@@ -36,7 +36,7 @@ func (ds *dockerService) IsExistImage(imageName string) bool {
 	return false
 }
 
-// 安装镜像
+// Install image
 func (ds *dockerService) PullImage(ctx context.Context, imageName string) error {
 	go PublishEventWrapper(ctx, common.EventTypeImagePullBegin, map[string]string{
 		common.PropertyTypeImageName.Name: imageName,
@@ -131,7 +131,7 @@ func (ds *dockerService) PullLatestImage(ctx context.Context, imageName string) 
 	return isImageUpdated, nil
 }
 
-// 删除镜像
+// Remove image
 func (ds *dockerService) RemoveImage(name string) error {
 	cli, err := client2.NewClientWithOpts(client2.FromEnv, client2.WithAPIVersionNegotiation())
 	if err != nil {
