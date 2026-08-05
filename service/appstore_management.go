@@ -392,8 +392,6 @@ func (a *AppStoreManagement) Catalog() (map[string]*ComposeApp, error) {
 		return nil, err
 	}
 
-	allFailed := true
-
 	for _, appStore := range appStoreMap {
 
 		c, err := appStore.Catalog()
@@ -402,26 +400,32 @@ func (a *AppStoreManagement) Catalog() (map[string]*ComposeApp, error) {
 			continue
 		}
 
-		allFailed = false
 		for storeAppID, composeApp := range c {
 			catalog[storeAppID] = composeApp
 		}
 	}
 
-	if !allFailed {
+	// The built-in store always takes part, and wins on ID collisions: it is the
+	// catalog we ship and support, so a third-party store must not redefine an
+	// app we publish. It used to be a fallback used only when every registered
+	// store failed to load, which meant a single working external store silently
+	// hid every app that exists only in ours.
+	if a.defaultAppStore == nil {
+		logger.Info("WARNING - no default appstore")
 		return catalog, nil
 	}
 
-	logger.Info("No appstore registered")
-	if a.defaultAppStore == nil {
-		logger.Info("WARNING - no default appstore")
-		return map[string]*ComposeApp{}, nil
+	defaultCatalog, err := a.defaultAppStore.Catalog()
+	if err != nil {
+		if len(catalog) == 0 {
+			return map[string]*ComposeApp{}, err
+		}
+		logger.Error("error while getting default appstore catalog", zap.Error(err))
+		return catalog, nil
 	}
 
-	logger.Info("Using default appstore")
-	catalog, err = a.defaultAppStore.Catalog()
-	if err != nil {
-		return map[string]*ComposeApp{}, err
+	for storeAppID, composeApp := range defaultCatalog {
+		catalog[storeAppID] = composeApp
 	}
 
 	return catalog, nil
