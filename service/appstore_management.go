@@ -283,8 +283,6 @@ func (a *AppStoreManagement) CategoryMap() (map[string]codegen.CategoryInfo, err
 		return nil, err
 	}
 
-	allFailed := true
-
 	categoryMap := map[string]codegen.CategoryInfo{}
 	for _, appStore := range appStoreMap {
 		c, err := appStore.CategoryMap()
@@ -293,24 +291,25 @@ func (a *AppStoreManagement) CategoryMap() (map[string]codegen.CategoryInfo, err
 			continue
 		}
 
-		allFailed = false
-
 		for name, category := range c {
 			categoryMap[name] = category
 		}
 	}
 
-	if allFailed {
-		logger.Info("all appstores failed to load category map, using default")
-
-		if a.defaultAppStore == nil {
-			logger.Info("WARNING - no default appstore")
-			return map[string]codegen.CategoryInfo{}, nil
-		}
-
-		categoryMap, err = a.defaultAppStore.CategoryMap()
-		if err != nil {
+	// Same reasoning as Catalog(): the built-in category list always takes part.
+	// Categories only an external store declares stay available, but every
+	// category our own apps are filed under has to exist, or those apps have
+	// nowhere to appear when browsing by category.
+	if a.defaultAppStore == nil {
+		logger.Info("WARNING - no default appstore")
+	} else if c, err := a.defaultAppStore.CategoryMap(); err != nil {
+		if len(categoryMap) == 0 {
 			return nil, err
+		}
+		logger.Error("error while loading default category map", zap.Error(err))
+	} else {
+		for name, category := range c {
+			categoryMap[name] = category
 		}
 	}
 
@@ -350,8 +349,6 @@ func (a *AppStoreManagement) Recommend() ([]string, error) {
 		return nil, err
 	}
 
-	allFailed := true
-
 	recommend := []string{}
 	for _, appStore := range appStoreMap {
 		r, err := appStore.Recommend()
@@ -360,28 +357,27 @@ func (a *AppStoreManagement) Recommend() ([]string, error) {
 			continue
 		}
 
-		allFailed = false
 		recommend = lo.Union(recommend, r)
 	}
 
-	if !allFailed {
+	// Same reasoning as Catalog(): our own recommendations are always part of the
+	// list. They go first — this is the store we curate.
+	if a.defaultAppStore == nil {
+		logger.Info("WARNING - no default appstore")
 		return recommend, nil
 	}
 
-	logger.Info("No appstore registered")
-	if a.defaultAppStore == nil {
-		logger.Info("WARNING - no default appstore")
-		return nil, nil
-	}
-
-	logger.Info("Using default appstore")
-	recommend, err = a.defaultAppStore.Recommend()
+	r, err := a.defaultAppStore.Recommend()
 	if err != nil {
+		if len(recommend) == 0 {
+			logger.Error("error while getting default appstore recommend list", zap.Error(err))
+			return nil, err
+		}
 		logger.Error("error while getting default appstore recommend list", zap.Error(err))
-		return nil, err
+		return recommend, nil
 	}
 
-	return recommend, nil
+	return lo.Union(r, recommend), nil
 }
 
 func (a *AppStoreManagement) Catalog() (map[string]*ComposeApp, error) {
@@ -392,8 +388,6 @@ func (a *AppStoreManagement) Catalog() (map[string]*ComposeApp, error) {
 		return nil, err
 	}
 
-	allFailed := true
-
 	for _, appStore := range appStoreMap {
 
 		c, err := appStore.Catalog()
@@ -402,26 +396,32 @@ func (a *AppStoreManagement) Catalog() (map[string]*ComposeApp, error) {
 			continue
 		}
 
-		allFailed = false
 		for storeAppID, composeApp := range c {
 			catalog[storeAppID] = composeApp
 		}
 	}
 
-	if !allFailed {
+	// The built-in store always takes part, and wins on ID collisions: it is the
+	// catalog we ship and support, so a third-party store must not redefine an
+	// app we publish. It used to be a fallback used only when every registered
+	// store failed to load, which meant a single working external store silently
+	// hid every app that exists only in ours.
+	if a.defaultAppStore == nil {
+		logger.Info("WARNING - no default appstore")
 		return catalog, nil
 	}
 
-	logger.Info("No appstore registered")
-	if a.defaultAppStore == nil {
-		logger.Info("WARNING - no default appstore")
-		return map[string]*ComposeApp{}, nil
+	defaultCatalog, err := a.defaultAppStore.Catalog()
+	if err != nil {
+		if len(catalog) == 0 {
+			return map[string]*ComposeApp{}, err
+		}
+		logger.Error("error while getting default appstore catalog", zap.Error(err))
+		return catalog, nil
 	}
 
-	logger.Info("Using default appstore")
-	catalog, err = a.defaultAppStore.Catalog()
-	if err != nil {
-		return map[string]*ComposeApp{}, err
+	for storeAppID, composeApp := range defaultCatalog {
+		catalog[storeAppID] = composeApp
 	}
 
 	return catalog, nil
