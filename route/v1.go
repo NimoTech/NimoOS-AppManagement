@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/NimoTech/NimoOS-AppManagement/common"
 	"github.com/NimoTech/NimoOS-AppManagement/pkg/config"
@@ -72,7 +73,7 @@ func InitV1Router() http.Handler {
 		TokenLookupFuncs: []echo_middleware.ValuesExtractor{
 			func(c echo.Context) ([]string, error) {
 				if len(c.Request().Header.Get(echo.HeaderAuthorization)) > 0 {
-					return []string{c.Request().Header.Get(echo.HeaderAuthorization)}, nil
+					return []string{strings.TrimPrefix(c.Request().Header.Get(echo.HeaderAuthorization), "Bearer ")}, nil
 				}
 				return []string{c.QueryParam("token")}, nil
 			},
@@ -85,8 +86,8 @@ func InitV1Router() http.Handler {
 
 			v1ContainerGroup.GET("", v1.MyAppList) ///my/list
 			v1ContainerGroup.GET("/usage", v1.AppUsageList)
-			v1ContainerGroup.GET("/:id", v1.ContainerUpdateInfo)   ///update/:id/info
-			v1ContainerGroup.GET("/:id/compose", v1.ToComposeYAML) // /app/setting/:id
+			v1ContainerGroup.GET("/:id", v1.ContainerUpdateInfo)      ///update/:id/info
+			v1ContainerGroup.GET("/:id/compose", v1.ToComposeYAML)    // /app/setting/:id
 			v1ContainerGroup.GET("/:id/logs", v1.ContainerLog)        // /app/logs/:id
 			v1ContainerGroup.GET("/networks", v1.GetDockerNetworks)   // /app/install/config
 			v1ContainerGroup.PUT("/archive/:id", v1.ArchiveContainer) // /container/archive/:id
@@ -99,7 +100,7 @@ func InitV1Router() http.Handler {
 			v1ContainerGroup.PUT("/:id", v1.UpdateSetting) ///update/:id/setting
 
 			v1ContainerGroup.PUT("/:id/state", v1.ChangAppState) // /app/state/:id
-			v1ContainerGroup.DELETE("/:id", v1.UninstallApp) // app/uninstall/:id
+			v1ContainerGroup.DELETE("/:id", v1.UninstallApp)     // app/uninstall/:id
 
 			v1ContainerGroup.GET("/info", v1.GetDockerDaemonConfiguration)
 			v1ContainerGroup.PUT("/info", v1.PutDockerDaemonConfiguration)
