@@ -162,7 +162,11 @@ func TestWorkDir(t *testing.T) {
 
 	workdir, err = appStore.WorkDir()
 	assert.NilError(t, err)
-	assert.Equal(t, workdir, filepath.Join(config.AppInfo.AppStorePath, hostname, "8b0968a7d7cda3f813d05736a89d0c92"))
+	// md5 of the lowercased URL path. The rename to NimoTech changed `path`
+	// above but left this constant as the hash of
+	// /icewhaletech/casaos-appstore/archive/refs/heads/main.zip, so the test
+	// had been asserting the old store's work directory.
+	assert.Equal(t, workdir, filepath.Join(config.AppInfo.AppStorePath, hostname, "21080aa2f9acf9ee3d225918f9ccd70f"))
 }
 
 func TestStoreRoot(t *testing.T) {

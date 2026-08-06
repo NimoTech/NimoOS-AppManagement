@@ -49,7 +49,7 @@ var upgrader = websocket.Upgrader{
 	HandshakeTimeout: time.Duration(time.Second * 5),
 }
 
-// 打开docker的terminal
+// Open a docker terminal
 func DockerTerminal(ctx echo.Context) error {
 	col := v2.DefaultQuery(ctx, "cols", "100")
 	row := v2.DefaultQuery(ctx, "rows", "30")
@@ -63,9 +63,9 @@ func DockerTerminal(ctx echo.Context) error {
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: err.Error()})
 	}
-	// 关闭I/O流
+	// Close I/O stream
 	defer hr.Close()
-	// 退出进程
+	// Exit the process
 	defer func() {
 		if _, err := hr.Conn.Write([]byte("exit\r")); err != nil {
 			logger.Error("error when trying `exit` to container", zap.Error(err))
@@ -82,15 +82,15 @@ func DockerTerminal(ctx echo.Context) error {
 	return nil
 }
 
-// @Summary 安装app(该接口需要post json数据)
+// @Summary Install app (this endpoint requires posting JSON data)
 // @Produce  application/json
 // @Accept application/json
 // @Tags app
 // @Param  id path int true "id"
-// @Param  port formData int true "主端口"
-// @Param  tcp formData string false "tcp端口"
-// @Param  udp formData string false "udp端口"
-// @Param  env formData string false "环境变量"
+// @Param  port formData int true "main port"
+// @Param  tcp formData string false "tcp ports"
+// @Param  udp formData string false "udp ports"
+// @Param  env formData string false "environment variables"
 // @Security ApiKeyAuth
 // @Success 200 {string} string "ok"
 // @Router /app/install [post]
@@ -211,11 +211,11 @@ func InstallApp(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: m.Label})
 }
 
-// @Summary 卸载app
+// @Summary Uninstall app
 // @Produce  application/json
 // @Accept multipart/form-data
 // @Tags app
-// @Param  id path string true "容器id"
+// @Param  id path string true "container id"
 // @Security ApiKeyAuth
 // @Success 200 {string} string "ok"
 // @Router /app/uninstall/{id} [delete]
@@ -265,12 +265,12 @@ func UninstallApp(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS)})
 }
 
-// @Summary 修改app状态
+// @Summary Change app state
 // @Produce  application/json
 // @Accept multipart/form-data
 // @Tags app
 // @Param  id path string true "appid"
-// @Param  state query string false "是否停止 start stop restart"
+// @Param  state query string false "whether to stop: start stop restart"
 // @Security ApiKeyAuth
 // @Success 200 {string} string "ok"
 // @Router /app/state/{id} [put]
@@ -322,7 +322,7 @@ func ChangAppState(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: info.State})
 }
 
-// @Summary 查看容器日志
+// @Summary View container logs
 // @Produce  application/json
 // @Accept application/json
 // @Tags app
@@ -341,11 +341,11 @@ func ContainerLog(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: string(log)})
 }
 
-// @Summary 获取容器状态
+// @Summary Get container state
 // @Produce  application/json
 // @Accept application/json
 // @Tags app
-// @Param  id path string true "容器id"
+// @Param  id path string true "container id"
 // @Param  type query string false "type=1"
 // @Security ApiKeyAuth
 // @Success 200 {string} string "ok"
@@ -365,16 +365,16 @@ func GetContainerState(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: data})
 }
 
-// @Summary 更新设置
+// @Summary Update settings
 // @Produce  application/json
 // @Accept multipart/form-data
 // @Tags app
-// @Param  id path string true "容器id"
-// @Param  shares formData string false "cpu权重"
-// @Param  mem formData string false "内存大小MB"
-// @Param  restart formData string false "重启策略"
-// @Param  label formData string false "应用名称"
-// @Param  position formData bool true "是否放到首页"
+// @Param  id path string true "container id"
+// @Param  shares formData string false "cpu weight"
+// @Param  mem formData string false "memory size (MB)"
+// @Param  restart formData string false "restart policy"
+// @Param  label formData string false "app name"
+// @Param  position formData bool true "whether to pin to the home page"
 // @Security ApiKeyAuth
 // @Success 200 {string} string "ok"
 // @Router /app/update/{id}/setting [put]
@@ -418,7 +418,7 @@ func UpdateSetting(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: err.Error()})
 	}
 
-	// step：启动容器
+	// step: start container
 	if err = service.MyService.Docker().StartContainer(containerID); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: err.Error()})
 	}
@@ -479,14 +479,14 @@ func ContainerUpdateInfo(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: m})
 }
 
-// @Summary 我的应用列表
+// @Summary My app list
 // @Produce  application/json
 // @Accept application/json
 // @Tags app
 // @Security ApiKeyAuth
 // @Param  index query int false "index"
 // @Param  size query int false "size"
-// @Param  position query bool false "是否是首页应用"
+// @Param  position query bool false "whether it's a home-page app"
 // @Success 200 {string} string "ok"
 // @Router /app/my/list [get]
 func MyAppList(ctx echo.Context) error {
@@ -575,10 +575,10 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 		}
 	}
 
-	// 获取当前 Docker 数据目录（迁移源）
+	// Get the current Docker data directory (migration source)
 	oldRoot := dockerConfig.Root
 	if oldRoot == "" {
-		oldRoot = "/var/lib/docker" // Docker 默认路径
+		oldRoot = "/var/lib/docker" // Docker's default path
 	}
 
 	dockerRootDir := value.(string)
@@ -599,22 +599,22 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 		}
 	}
 
-	// 路径未变化则跳过迁移
+	// Skip migration if the path hasn't changed
 	if oldRoot == newRoot {
 		return ctx.JSON(http.StatusOK, &modelCommon.Result{Success: common_err.SUCCESS, Message: common_err.GetMsg(common_err.SUCCESS), Data: request})
 	}
 
-	// 停止 Docker，迁移数据，再重启
+	// Stop Docker, migrate the data, then restart
 	if err := systemctl.StopService("docker"); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to stop docker service"})
 	}
 
-	// 将旧目录数据 rsync 到新目录
+	// rsync the old directory's data to the new directory
 	if file.Exists(oldRoot) {
 		go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationBegin, nil)
 
 		cmd := exec.Command("rsync", "-a", "--info=progress2", "--ignore-existing", oldRoot+"/", newRoot+"/")
-		
+
 		stdoutPipe, err := cmd.StdoutPipe()
 		if err != nil {
 			go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationError, map[string]string{
@@ -623,7 +623,7 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 			_ = systemctl.StartService("docker")
 			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error creating stdout pipe"})
 		}
-		
+
 		cmd.Stderr = os.Stderr
 
 		if err := cmd.Start(); err != nil {
@@ -650,14 +650,14 @@ func PutDockerDaemonConfiguration(ctx echo.Context) error {
 		}()
 
 		if err := cmd.Wait(); err != nil {
-			// 迁移失败则回滚：重启 Docker 保持原状
+			// Migration failed, roll back: restart Docker to keep the original state
 			_ = systemctl.StartService("docker")
 			go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationError, map[string]string{
 				common.PropertyTypeMessage.Name: "error when trying to wait rsync: " + err.Error(),
 			})
 			return ctx.JSON(http.StatusInternalServerError, &modelCommon.Result{Success: common_err.SERVICE_ERROR, Message: "error when trying to migrate docker data: " + err.Error()})
 		}
-		
+
 		go service.PublishEventWrapper(ctx.Request().Context(), common.EventTypeDockerMigrationEnd, nil)
 	}
 
@@ -704,7 +704,7 @@ func PruneDocker(ctx echo.Context) error {
 }
 
 func pullAndInstall(ctx context.Context, imageName string, m *model.CustomizationPostData) error {
-	// step：下载镜像
+	// step: download image
 	if err := func() error {
 		go service.PublishEventWrapper(ctx, common.EventTypeImagePullBegin, nil)
 
@@ -753,7 +753,7 @@ func pullAndInstall(ctx context.Context, imageName string, m *model.Customizatio
 		return err
 	}
 
-	// step：启动容器
+	// step: start container
 	if err := func() error {
 		go service.PublishEventWrapper(ctx, common.EventTypeContainerStartBegin, nil)
 
@@ -777,7 +777,7 @@ func pullAndInstall(ctx context.Context, imageName string, m *model.Customizatio
 }
 
 func uninstall(ctx context.Context, container *types.ContainerJSON, isDelete bool) error {
-	// step：停止容器
+	// step: stop container
 	if err := func() error {
 		go service.PublishEventWrapper(ctx, common.EventTypeContainerStopBegin, nil)
 
@@ -833,7 +833,7 @@ func uninstall(ctx context.Context, container *types.ContainerJSON, isDelete boo
 	}
 
 	if container.Config.Labels["origin"] != "custom" && isDelete {
-		// step: 删除文件夹
+		// step: remove folder
 		for _, v := range container.Mounts {
 			if strings.Contains(v.Source, container.Name) {
 				path := filepath.Join(strings.Split(v.Source, container.Name)[0], container.Name)

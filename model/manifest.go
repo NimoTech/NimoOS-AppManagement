@@ -9,7 +9,7 @@ type UDPPorts struct {
 	ContainerPort int    `json:"container_port"`
 }
 
-/*******************使用gorm支持json************************************/
+/*******************gorm JSON support************************************/
 
 type PortMap struct {
 	ContainerPort string `json:"container"`
@@ -23,7 +23,7 @@ type PortArray []PortMap
 
 /************************************************************************/
 
-/*******************使用gorm支持json************************************/
+/*******************gorm JSON support************************************/
 
 type Env struct {
 	Name  string `json:"container"`
@@ -36,7 +36,7 @@ type EnvArray []Env
 
 /************************************************************************/
 
-/*******************使用gorm支持json************************************/
+/*******************gorm JSON support************************************/
 
 type PathMap struct {
 	ContainerPath string `json:"container"`
