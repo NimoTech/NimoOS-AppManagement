@@ -115,6 +115,9 @@ func main() {
 		}
 	}
 
+	// watch docker daemon events and forward to message bus (desktop instant sync)
+	go service.MonitorDockerEvents(ctx)
+
 	// setup listener
 	listener, err := net.Listen("tcp", net.JoinHostPort(common.Localhost, "0"))
 	if err != nil {

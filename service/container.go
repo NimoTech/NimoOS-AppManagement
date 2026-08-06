@@ -345,6 +345,7 @@ func (ds *dockerService) GetContainerAppList(name, image, state *string) (*[]mod
 				Created:  m.Created,
 			}
 
+			ApplyDesktopMeta(&localApp, m.Labels)
 			localApps = append(localApps, localApp)
 		}
 	}
@@ -371,7 +372,24 @@ func (ds *dockerService) CreateContainerShellSession(container, row, col string)
 		return types.HijackedResponse{}, err
 	}
 
-	return cli.ContainerExecAttach(ctx, ir.ID, types.ExecStartCheck{Detach: false, Tty: true})
+	hijack, err := cli.ContainerExecAttach(ctx, ir.ID, types.ExecStartCheck{Detach: false, Tty: true})
+	if err != nil {
+		return types.HijackedResponse{}, err
+	}
+
+	// 上面的 Env COLUMNS/LINES 只是提示(多数 shell 不理会),真正的 PTY 窗口尺寸必须走
+	// ExecResize(TIOCSWINSZ),否则内核侧一直是 docker 默认 80x24:shell 在 80 列折行/重绘,
+	// 前端 xterm 实际更宽 → 长命令提前换行、退格删不净上一行。前端连接时按可视区带 cols/rows,
+	// 这里一次性生效(前端不支持中途 resize,见 route/v1.go DockerTerminal 注释)。
+	if w, errW := strconv.Atoi(col); errW == nil && w > 0 {
+		if h, errH := strconv.Atoi(row); errH == nil && h > 0 {
+			if err := cli.ContainerExecResize(ctx, ir.ID, types.ResizeOptions{Height: uint(h), Width: uint(w)}); err != nil {
+				logger.Error("failed to resize container exec tty (session continues at default size)", zap.Error(err))
+			}
+		}
+	}
+
+	return hijack, nil
 }
 
 // Actual implementation

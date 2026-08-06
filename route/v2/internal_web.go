@@ -172,7 +172,44 @@ func WebAppGridItemAdapterV2(composeAppWithStoreInfo *codegen.ComposeAppWithStor
 		item.IsUncontrolled = composeAppWithStoreInfo.IsUncontrolled
 	}
 
+	// nimoos.* 桌面 label:compose 应用在主服务 labels 里声明(spec §5.1)
+	if composeAppStoreInfo != nil && composeAppStoreInfo.Main != nil {
+		for i := range composeApp.Services {
+			if composeApp.Services[i].Name != *composeAppStoreInfo.Main {
+				continue
+			}
+			if dm := service.ParseDesktopLabels(composeApp.Services[i].Labels); dm != nil {
+				item.Desktop = utils.Ptr(true)
+				if dm.WidgetPath != "" {
+					item.Widget = &codegen.WebAppGridItemWidget{
+						Path: dm.WidgetPath,
+						W:    utils.Ptr(dm.WidgetW),
+						H:    utils.Ptr(dm.WidgetH),
+					}
+					setWidgetRange(item.Widget, dm.WidgetMinW, dm.WidgetMinH, dm.WidgetMaxW, dm.WidgetMaxH)
+				}
+			}
+			break
+		}
+	}
+
 	return item, nil
+}
+
+// setWidgetRange 只在 label 声明了对应值(>0)时带字段——未声明保持无字段,老桌面忽略。
+func setWidgetRange(w *codegen.WebAppGridItemWidget, minw, minh, maxw, maxh int) {
+	if minw > 0 {
+		w.Minw = utils.Ptr(minw)
+	}
+	if minh > 0 {
+		w.Minh = utils.Ptr(minh)
+	}
+	if maxw > 0 {
+		w.Maxw = utils.Ptr(maxw)
+	}
+	if maxh > 0 {
+		w.Maxh = utils.Ptr(maxh)
+	}
 }
 
 func WebAppGridItemAdapterV1(app *model.MyAppList) (*codegen.WebAppGridItem, error) {
@@ -228,6 +265,36 @@ func WebAppGridItemAdapterContainer(container *model.MyAppList) (*codegen.WebApp
 			common.DefaultLanguage: container.Name,
 		},
 		IsUncontrolled: &container.IsUncontrolled,
+	}
+
+	if container.Desktop {
+		item.Name = &container.Name // 容器名 = 前端稳定 key(重建容器不变)
+		title := container.DesktopTitle
+		if title == "" {
+			title = container.Name
+		}
+		item.Title = &map[string]string{common.DefaultLanguage: title}
+		item.Desktop = utils.Ptr(true)
+		if container.Icon != "" {
+			item.Icon = &container.Icon
+		}
+		if container.Port != "" {
+			item.Port = &container.Port
+		}
+		if container.Index != "" {
+			item.Index = &container.Index
+		}
+		if container.Protocol != "" {
+			item.Scheme = (*codegen.Scheme)(&container.Protocol)
+		}
+		if container.WidgetPath != "" {
+			item.Widget = &codegen.WebAppGridItemWidget{
+				Path: container.WidgetPath,
+				W:    utils.Ptr(container.WidgetW),
+				H:    utils.Ptr(container.WidgetH),
+			}
+			setWidgetRange(item.Widget, container.WidgetMinW, container.WidgetMinH, container.WidgetMaxW, container.WidgetMaxH)
+		}
 	}
 
 	return item, nil

@@ -7,6 +7,7 @@ import (
 
 	"github.com/NimoTech/NimoOS-AppManagement/codegen"
 	"github.com/NimoTech/NimoOS-AppManagement/common"
+	"github.com/NimoTech/NimoOS-AppManagement/model"
 	"github.com/NimoTech/NimoOS-AppManagement/pkg/docker"
 	v2 "github.com/NimoTech/NimoOS-AppManagement/route/v2"
 	"github.com/NimoTech/NimoOS-AppManagement/service"
@@ -64,4 +65,47 @@ func TestWebAppGridItemAdapter(t *testing.T) {
 	assert.DeepEqual(t, *gridItem.Title, storeInfo.Title)
 	assert.Equal(t, *gridItem.AuthorType, codegen.ByNimoos)
 	assert.Equal(t, *gridItem.IsUncontrolled, false)
+}
+
+func TestWebAppGridItemAdapterContainerDesktop(t *testing.T) {
+	app := &model.MyAppList{
+		ID: "cid123", Name: "my-dl", State: "running", Image: "img:1",
+		Desktop: true, DesktopTitle: "下载器", Icon: "/icon.png",
+		Port: "8080", Index: "/", Protocol: "http",
+		WidgetPath: "/widget", WidgetW: 3, WidgetH: 2,
+	}
+	item, err := v2.WebAppGridItemAdapterContainer(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if item.Desktop == nil || !*item.Desktop {
+		t.Fatal("desktop flag missing")
+	}
+	if item.Name == nil || *item.Name != "my-dl" {
+		t.Fatalf("desktop 容器 Name 应为容器名(稳定 key),got %v", item.Name)
+	}
+	if (*item.Title)["en_us"] != "下载器" && (*item.Title)[common.DefaultLanguage] != "下载器" {
+		t.Fatalf("title missing: %v", item.Title)
+	}
+	if item.Icon == nil || *item.Icon != "/icon.png" || item.Port == nil || *item.Port != "8080" {
+		t.Fatalf("meta missing: %+v", item)
+	}
+	if item.Widget == nil || item.Widget.Path != "/widget" || *item.Widget.W != 3 || *item.Widget.H != 2 {
+		t.Fatalf("widget missing: %+v", item.Widget)
+	}
+}
+
+func TestWebAppGridItemAdapterContainerPlain(t *testing.T) {
+	// 回归红线:非 desktop 容器输出与改造前完全一致
+	app := &model.MyAppList{ID: "cid456", Name: "other", State: "exited", Image: "img:2"}
+	item, err := v2.WebAppGridItemAdapterContainer(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if item.Name == nil || *item.Name != "cid456" {
+		t.Fatal("plain 容器 Name 必须仍是容器 ID(现状)")
+	}
+	if item.Desktop != nil || item.Widget != nil || item.Icon != nil || item.Port != nil {
+		t.Fatalf("plain 容器不得有新字段: %+v", item)
+	}
 }

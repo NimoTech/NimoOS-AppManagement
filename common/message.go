@@ -65,6 +65,11 @@ var (
 		Description: utils.Ptr("name of the container"),
 		Example:     utils.Ptr("hello-world"),
 	}
+
+	PropertyTypeContainerAction = message_bus.PropertyType{
+		Name:        "docker:container:action",
+		Description: utils.Ptr("docker daemon event action, one of `start`, `die`, `destroy`"),
+	}
 )
 
 // image properties
@@ -103,6 +108,7 @@ var EventTypes = []message_bus.EventType{
 	EventTypeContainerStopBegin, EventTypeContainerStopEnd, EventTypeContainerStopError,
 	EventTypeContainerRenameBegin, EventTypeContainerRenameEnd, EventTypeContainerRenameError,
 	EventTypeContainerRemoveBegin, EventTypeContainerRemoveEnd, EventTypeContainerRemoveError,
+	EventTypeContainerStateChanged,
 
 	// docker migration
 	EventTypeDockerMigrationBegin, EventTypeDockerMigrationProgress, EventTypeDockerMigrationEnd, EventTypeDockerMigrationError,
@@ -506,6 +512,18 @@ var (
 		PropertyTypeList: []message_bus.PropertyType{
 			PropertyTypeContainerID,
 			PropertyTypeMessage,
+		},
+	}
+
+	// EventTypeContainerStateChanged 来自 docker daemon 事件流(而非本服务 API 操作),
+	// 覆盖终端/外部工具直接操作容器的场景。消费方:New-UI 桌面秒级同步。
+	EventTypeContainerStateChanged = message_bus.EventType{
+		SourceID: AppManagementServiceName,
+		Name:     "docker:container:state-changed",
+		PropertyTypeList: []message_bus.PropertyType{
+			PropertyTypeContainerID,
+			PropertyTypeContainerName,
+			PropertyTypeContainerAction,
 		},
 	}
 )
