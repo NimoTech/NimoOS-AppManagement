@@ -172,7 +172,7 @@ LogPath = /var/log/nimoos
 
 [server]
 ; Multiple third-party store sources can be configured (AllowShadows); the sample currently points at the CasaOS upstream repo
-appstore = https://nimoos-public.s3.us-east-2.amazonaws.com/nimoos/appstore/store/main.zip
+appstore = https://get.nimotech.ai/nimoos/appstore/store/main.zip
 appstore = https://github.com/bigbeartechworld/big-bear-casaos/archive/refs/heads/master.zip
 ```
 
