@@ -219,7 +219,7 @@ require (
 )
 
 require (
-	github.com/NimoTech/NimoOS-Common v0.4.8-alpha19
+	github.com/NimoTech/NimoOS-Common v1.9.4-alpha2
 	github.com/compose-spec/compose-go v1.20.2
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
 	github.com/docker/cli v24.0.7+incompatible
@@ -248,4 +248,3 @@ require (
 // Override for e2e tests
 replace github.com/cucumber/godog => github.com/laurazard/godog v0.0.0-20220922095256-4c4b17abdae7
 
-replace github.com/NimoTech/NimoOS-Common => ../NimoOS-Common
