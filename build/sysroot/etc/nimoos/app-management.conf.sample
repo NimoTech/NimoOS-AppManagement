@@ -9,5 +9,5 @@ AppStorePath = /var/lib/nimoos/appstore
 AppsPath = /var/lib/nimoos/apps
 
 [server]
-appstore = https://nimoos-public.s3.us-east-2.amazonaws.com/nimoos/appstore/store/main.zip
+appstore = https://get.nimotech.ai/nimoos/appstore/store/main.zip
 appstore = https://github.com/bigbeartechworld/big-bear-casaos/archive/refs/heads/master.zip
